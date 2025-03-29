@@ -8,7 +8,6 @@ public class Yams {
 
 		System.out.println("Welcome, player, please enter your name.");
 		return scanner.nextLine();
-
 	}
 
 	private static int askReroll(Scanner scanner) {
@@ -46,7 +45,6 @@ public class Yams {
 
 	public static void main(String[] args) {
 
-		// mettre scanner en var global
 		var scanner = new Scanner(System.in);
 		var name = init(scanner);
 		System.out.println("Hello " + name + ", and good luck !\n");
@@ -57,13 +55,12 @@ public class Yams {
 		// avec leur conditions et leurs poitns associée
 
 
-		// roundCOunter jusqu'a 7
+		// roundCounter jusqu'a 7
 		// Début du tour du joueur
 		for (var roundCounter = 0; roundCounter < 2; roundCounter++) {
 			System.out.println("Welcome in round " + (roundCounter + 1));
 
 			// 1er lancer de dés 
-			// mettre le borad en var global 
 			var board = new Board();
 
 			System.out.println(board);
