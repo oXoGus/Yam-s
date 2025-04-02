@@ -86,7 +86,7 @@ public class Yams {
 
 			// rassembler la demande dans une fonction static getCombination
 			var combinationChoice = parseCombination(askCombination(scanner));
-			scoreSheet.updateScore(combinationChoice, board);
+			//scoreSheet.updateScore(combinationChoice, board);
 			System.out.println(scoreSheet);
 		}
 

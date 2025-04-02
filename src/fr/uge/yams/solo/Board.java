@@ -1,6 +1,8 @@
 package fr.uge.yams.solo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Board {
 
@@ -11,6 +13,16 @@ public class Board {
 			fiveDice.add(new Dice());
 		}
 	}
+
+
+	// pour les test
+	public Board(List<Integer> lm) {
+		for (var i = 1; i <= 5; i++) {
+			fiveDice.add(new Dice(lm.get(i - 1)));
+		}
+	}
+
+
 
 	@Override
 	public String toString() {
@@ -31,9 +43,34 @@ public class Board {
 		fiveDice.set(pos - 1, new Dice());
 	}
 
+	// somme de tout les dés pour le calcul du score
+	public int sum(){
+		int s = 0;
+		for (var dice : fiveDice){
+			s += dice.value();
+		}
+		return s;
+	}
+
+	// revoi un tableau contenant 
+	public List<Integer> occurence(){
+		// on créer un tableau qui contiendra le nombre 
+		// d'occurence de dés de valeur i a l'index i
+		ArrayList<Integer> occLst = new ArrayList<Integer>(List.of(0, 0, 0, 0, 0, 0, 0));
+		
+		for (var dice : fiveDice){
+			occLst.set(dice.value(), occLst.get(dice.value()) + 1);
+		}
+		return List.copyOf(occLst);
+	}
+
+	public int maxOcc(){
+		return Collections.max(occurence());
+	}
+
 	public static void main(String[] args) {
 
-		var board = new Board();
+		var board = new Board(List.of(1, 1, 3, 4, 5));
 		System.out.println(board);
 		board.reroll(2);
 		System.out.println(board);
