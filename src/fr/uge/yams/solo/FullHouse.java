@@ -20,9 +20,9 @@ public record FullHouse() implements Combination {
 		return occList.contains(3) && occList.contains(2);
 	}
 
-	public String toString(int state) {
+	public String toString(String state) {
 		// on utilise l'état pour faire un affichage dynamique
-		return "| 4   | "+ (state == -1 ? "sacrified " : (state == 1 ? "validate  " : "          ")) + "| Full House      | Three of one number and two of another | 25	       |\n";
+		return "| Fu   | "+ state + "| Full House      | Three of one number and two of another | 25              |\n";
 	}
 
 }

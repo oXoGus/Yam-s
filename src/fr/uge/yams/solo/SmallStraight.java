@@ -34,9 +34,9 @@ public record SmallStraight() implements Combination {
 	}
 
 	
-	public String toString(int state) {
+	public String toString(String state) {
 		// on utilise l'état pour faire un affichage dynamique
-		return "| 5   | "+ (state == -1 ? "sacrified " : (state == 1 ? "validate  " : "          ")) + "| Small Straight  | Four sequential dice                   | 30              |\n";
+		return "| S    | "+ state + "| Small Straight  | Four sequential dice                   | 30              |\n";
 	}
 
 }

@@ -13,9 +13,9 @@ public record ThreeOfAKind() implements Combination {
 	}
 
 
-	public String toString(int state) {
+	public String toString(String state, String score) {
 		// on utilise l'état pour faire un affichage dynamique
-		return "| 2   | "+ (state == -1 ? "sacrified " : (state == 1 ? "validate  " : "          ")) + "| Three of a Kind | At least three dice the same           | Sum of all dice |\n";
+		return "| T    | "+ state + "| Three of a Kind | At least three dice the same           | " + score + " |\n";
 	}
 
 }

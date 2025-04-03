@@ -17,9 +17,9 @@ public record Yahtzee() implements Combination {
 	}
 
 
-	public String toString(int state) {
+	public String toString(String state) {
 		// on utilise l'état pour faire un affichage dynamique
-		return "| 7   | "+ (state == -1 ? "sacrified " : (state == 1 ? "validate  " : "          ")) + "| Yahtzee         | All five dice the same                 | 50              |\n";
+		return "| Y    | "+ state + "| Yahtzee         | All five dice the same                 | 50              |\n";
 	}
 
 }

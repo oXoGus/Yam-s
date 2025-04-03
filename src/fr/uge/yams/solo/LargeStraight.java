@@ -29,9 +29,9 @@ public record LargeStraight() implements Combination {
 		return false;
 	}
 
-	public String toString(int state) {
+	public String toString(String state) {
 		// on utilise l'état pour faire un affichage dynamique
-		return "| 6   | "+ (state == -1 ? "sacrified " : (state == 1 ? "validate  " : "          ")) + "| Large Straight  | Five sequential dice                   | 40              |\n";
+		return "| L    | "+ state + "| Large Straight  | Five sequential dice                   | 40              |\n";
 	}
 
 }

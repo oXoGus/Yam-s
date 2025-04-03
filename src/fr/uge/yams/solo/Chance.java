@@ -15,9 +15,9 @@ public record Chance() implements Combination {
 	}
 
 
-	public String toString(int state) {
+	public String toString(String state, String score) {
 		// on utilise l'état pour faire un affichage dynamique
-		return "| 1   | "+ (state == -1 ? "sacrified " : (state == 1 ? "validate  " : "          ")) + "| Chance          | Any combination                        | sum of all dice |\n";
+		return "| C    | "+ state + "| Chance          | Any combination                        | " + score + " |\n";
 	}
 
 }

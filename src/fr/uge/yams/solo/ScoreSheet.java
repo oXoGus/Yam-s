@@ -54,15 +54,26 @@ public class ScoreSheet {
 	}
 
 	// pour l'affichage dynamique du toString()
-	public int state(Combination pattern){
+	public String state(Combination pattern){
 		Objects.requireNonNull(pattern);
 		if (isValidate(pattern)){
-			return 1;
+			return "validate  ";
 		}
 		if (isSacrified(pattern)){
-			return -1;
+			return "sacrified ";
 		}
-		return 0;
+		return "          ";
+	}
+
+	public String dynamicScore(Combination pattern){
+		int score = validateCombinations.getOrDefault(pattern, 0);
+		if (score == 0){
+			return "Sum of all dice";
+		}
+		if (score < 10){
+			return score + "              ";
+		}
+		return score + "             ";
 	}
 
 	public int scoreTotal() {
@@ -74,16 +85,17 @@ public class ScoreSheet {
 	@Override
 	public String toString() {
 		String s;
-		String sep = "+-----+-----------+-----------------+----------------------------------------+-----------------+\n";
+		String sep = "+------+-----------+-----------------+----------------------------------------+-----------------+\n";
 		
 		
 		// titres des colonnes
 		s = sep;
-		s += "| num | state     | name            | descripton                             | score           |\n";
+		s += "| code | state     | name            | descripton                             | score           |\n";
 		s += sep;
-		s += new Chance().toString(state(new Chance()));
-		s += new ThreeOfAKind().toString(state(new ThreeOfAKind()));
-		s += new FourOfAKind().toString(state(new FourOfAKind()));
+
+		s += new Chance().toString(state(new Chance()), dynamicScore(new Chance()));
+		s += new ThreeOfAKind().toString(state(new ThreeOfAKind()), dynamicScore(new ThreeOfAKind()));
+		s += new FourOfAKind().toString(state(new FourOfAKind()), dynamicScore(new FourOfAKind()));
 		s += new FullHouse().toString(state(new FullHouse()));
 		s += new SmallStraight().toString(state(new SmallStraight()));
 		s += new LargeStraight().toString(state(new LargeStraight()));
@@ -96,10 +108,10 @@ public class ScoreSheet {
 
 	public static void main(String[] args) {
 		var scoreSheet = new ScoreSheet();
-		var board = new Board(List.of(1, 2, 3, 4, 5));
-		scoreSheet.addCombination(new LargeStraight(), board);
+		var board = new Board(List.of(1, 1, 1, 1, 1));
+		scoreSheet.addCombination(new Chance(), board);
 		
-		scoreSheet.addCombination(new SmallStraight(), board);
+		//scoreSheet.addCombination(new SmallStraight(), board);
 		System.out.println(scoreSheet);
 		System.out.println(scoreSheet.scoreTotal());
 	}
