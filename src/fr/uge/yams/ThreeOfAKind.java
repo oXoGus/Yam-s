@@ -1,4 +1,4 @@
-package fr.uge.yams.solo;
+package fr.uge.yams;
 
 import java.util.Objects;
 
@@ -11,7 +11,6 @@ public record ThreeOfAKind() implements Combination {
 		Objects.requireNonNull(board);
 		return board.maxOcc() >= 3;
 	}
-
 
 	public String toString(String state, String score) {
 		// on utilise l'état pour faire un affichage dynamique

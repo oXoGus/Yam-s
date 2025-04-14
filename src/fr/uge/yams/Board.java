@@ -1,8 +1,9 @@
-package fr.uge.yams.solo;
+package fr.uge.yams;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Board {
 
@@ -14,7 +15,9 @@ public class Board {
 		}
 	}
 
-
+	public ArrayList<Dice> fiveDice () {
+		return fiveDice;
+	}
 	// pour les test
 	public Board(List<Integer> lm) {
 		for (var i = 1; i <= 5; i++) {
@@ -28,19 +31,32 @@ public class Board {
 	public String toString() {
 		var builder = new StringBuilder();
 		for (var i = 1; i <= 5; i++) {
-			builder.append(fiveDice.get(i - 1).toString());
+			builder.append("-------  ");
 		}
-		builder.append("\n").append("-----------------\n");
+		builder.append("\n");
+		for (var i = 1; i <= 5; i++) {
+			builder.append(fiveDice.get(i-1).toString());
+			builder.append("  ");
+		}
+		builder.append("\n");
+		for (var i = 1; i <= 5; i++) {
+			builder.append("-------  ");
+		}
+		builder.append("\n");
+		
 
 		return builder.toString();
 	}
 
 	// faire un reroll avec comme argument la liste des pos des dés a modifs
-	public void reroll(int pos) {
-		if (pos < 1 || pos > 5) {
-			throw new IllegalArgumentException();
+	public void reroll(ArrayList<Integer> positions) {
+		Objects.requireNonNull(positions);
+		for (var pos : positions) {
+			if (pos<1 || pos>5) {
+				throw new IllegalArgumentException();
+			}
+			fiveDice.set(pos - 1, new Dice());
 		}
-		fiveDice.set(pos - 1, new Dice());
 	}
 
 	// somme de tout les dés pour le calcul du score
@@ -70,11 +86,12 @@ public class Board {
 
 	public static void main(String[] args) {
 
+		var lst = new ArrayList<Integer>(2);
+
 		var board = new Board(List.of(1, 1, 3, 4, 5));
 		System.out.println(board);
-		board.reroll(2);
+		board.reroll(lst);
 		System.out.println(board);
-		
 	}
 
 }

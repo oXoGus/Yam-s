@@ -1,4 +1,4 @@
-package fr.uge.yams.solo;
+package fr.uge.yams;
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package fr.uge.yams.solo;
+package fr.uge.yams;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -128,10 +128,7 @@ public class Yams {
 		case "S" -> new SmallStraight();
 		case "C" -> new Chance();
 		case "Y" -> new Yahtzee();
-		default -> null; // null par défaut
-
-		// si la verification échou 
-		// on redemande d'entrez la combianison tionCh
+		default -> null; // null par défaut pour la gestion des erreurs 
 		};
 	}
 

@@ -1,8 +1,8 @@
-package fr.uge.yams.solo;
+package fr.uge.yams;
 
 import java.util.Objects;
 
-public record FourOfAKind() implements Combination {
+public record Chance() implements Combination {
 
 	// utilisation de la méthode score abstraite par défaut
 	
@@ -10,13 +10,13 @@ public record FourOfAKind() implements Combination {
 	public boolean isValid(Board board) {
 		Objects.requireNonNull(board);
 
-		return board.maxOcc() >= 4;
+		// toutes les combinaisons de dé
+		return true;
 	}
-
 
 	public String toString(String state, String score) {
 		// on utilise l'état pour faire un affichage dynamique
-		return "| Fo   | "+ state + "| Four of a Kind  | At least four dice the same            | " + score + " |\n";
+		return "| C    | "+ state + "| Chance          | Any combination                        | " + score + " |\n";
 	}
 
 }

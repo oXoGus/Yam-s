@@ -1,4 +1,4 @@
-package fr.uge.yams.solo;
+package fr.uge.yams;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,20 +26,18 @@ public class ScoreSheet {
 		if (sacrifiedCombination.contains(pattern)){
 			throw new IllegalArgumentException("this combiantion is already sacrified");
 		}
-		if (!pattern.isValid(board)){
-			throw new IllegalArgumentException("this combination is not valid with this board");
-		}
 	}
 
 	public void addCombination(Combination pattern, Board board) {
 		verification(pattern, board);
-
+		if (!pattern.isValid(board)){
+			throw new IllegalArgumentException("this combination is not valid with this board");
+		}
 		validateCombinations.put(pattern, pattern.score(board));
 	}
 
-	public void sacrifyCombiation(Combination pattern, Board board){
+	public void sacrifyCombination(Combination pattern, Board board){
 		verification(pattern, board);
-		
 		sacrifiedCombination.add(pattern);
 	}
 
@@ -51,6 +49,38 @@ public class ScoreSheet {
 	public boolean isValidate(Combination pattern){
 		Objects.requireNonNull(pattern);
 		return validateCombinations.containsKey(pattern);
+	}
+
+	public boolean isCombinaisonLeft (Board board) {
+		var combC = new Chance();
+		if (combC.isValid(board) && !(isValidate(combC)) && !(isSacrified(combC)) ) {
+			return true;
+		}
+		var combF = new FourOfAKind();
+		if (combF.isValid(board) && !(isValidate(combF)) && !(isSacrified(combF)) ) {
+			return true;
+		}
+		var combFu = new FullHouse();
+		if (combFu.isValid(board) && !(isValidate(combFu)) && !(isSacrified(combFu)) ) {
+			return true;
+		}
+		var combL = new LargeStraight();
+		if (combL.isValid(board) && !(isValidate(combL)) && !(isSacrified(combL)) ) {
+			return true;
+		}
+		var combS = new SmallStraight();
+		if (combS.isValid(board) && !(isValidate(combS)) && !(isSacrified(combS)) ) {
+			return true;
+		}
+		var combT = new ThreeOfAKind();
+		if (combT.isValid(board) && !(isValidate(combT)) && !(isSacrified(combT)) ) {
+			return true;
+		}
+		var combY = new Yahtzee();
+		if (combY.isValid(board) && !(isValidate(combY)) && !(isSacrified(combY)) ) {
+			return true;
+		}
+		return false;
 	}
 
 	// pour l'affichage dynamique du toString()
@@ -100,7 +130,6 @@ public class ScoreSheet {
 		s += new SmallStraight().toString(state(new SmallStraight()));
 		s += new LargeStraight().toString(state(new LargeStraight()));
 		s += new Yahtzee().toString(state(new Yahtzee()));
-		sep = "+------+-----------+-----------------+----------------------------------------+-----------------+";
 		s += sep;
 		return s;
 
@@ -110,7 +139,7 @@ public class ScoreSheet {
 	public static void main(String[] args) {
 		var scoreSheet = new ScoreSheet();
 		var board = new Board(List.of(1, 1, 1, 1, 1));
-		scoreSheet.addCombination(new Yahtzee(), board);
+		scoreSheet.addCombination(new Chance(), board);
 		
 		//scoreSheet.addCombination(new SmallStraight(), board);
 		System.out.println(scoreSheet);
