@@ -74,6 +74,7 @@ public class Board {
 		System.out.println(board);
 		board.reroll(2);
 		System.out.println(board);
+		
 	}
 
 }

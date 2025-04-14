@@ -100,6 +100,7 @@ public class ScoreSheet {
 		s += new SmallStraight().toString(state(new SmallStraight()));
 		s += new LargeStraight().toString(state(new LargeStraight()));
 		s += new Yahtzee().toString(state(new Yahtzee()));
+		sep = "+------+-----------+-----------------+----------------------------------------+-----------------+";
 		s += sep;
 		return s;
 
@@ -109,7 +110,7 @@ public class ScoreSheet {
 	public static void main(String[] args) {
 		var scoreSheet = new ScoreSheet();
 		var board = new Board(List.of(1, 1, 1, 1, 1));
-		scoreSheet.addCombination(new Chance(), board);
+		scoreSheet.addCombination(new Yahtzee(), board);
 		
 		//scoreSheet.addCombination(new SmallStraight(), board);
 		System.out.println(scoreSheet);
