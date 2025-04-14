@@ -4,22 +4,34 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class Board {
 
-	private final ArrayList<Dice> fiveDice = new ArrayList<Dice>();
+	private final ArrayList<Dice> fiveDice;
 
 	public Board() {
+		fiveDice = new ArrayList<>();
+
 		for (var i = 1; i <= 5; i++) {
 			fiveDice.add(new Dice());
+		}
+	}
+
+	public void rerollAllDice(){
+		for (var i = 0; i < 5; i++) {
+			fiveDice.set(i, new Dice());
 		}
 	}
 
 	public ArrayList<Dice> fiveDice () {
 		return fiveDice;
 	}
+
 	// pour les test
 	public Board(List<Integer> lm) {
+		fiveDice = new ArrayList<>();
+
 		for (var i = 1; i <= 5; i++) {
 			fiveDice.add(new Dice(lm.get(i - 1)));
 		}
@@ -49,7 +61,7 @@ public class Board {
 	}
 
 	// faire un reroll avec comme argument la liste des pos des dés a modifs
-	public void reroll(ArrayList<Integer> positions) {
+	public void reroll(Set<Integer> positions) {
 		Objects.requireNonNull(positions);
 		for (var pos : positions) {
 			if (pos<1 || pos>5) {
@@ -57,6 +69,7 @@ public class Board {
 			}
 			fiveDice.set(pos - 1, new Dice());
 		}
+		
 	}
 
 	// somme de tout les dés pour le calcul du score
@@ -86,11 +99,9 @@ public class Board {
 
 	public static void main(String[] args) {
 
-		var lst = new ArrayList<Integer>(2);
-
 		var board = new Board(List.of(1, 1, 3, 4, 5));
 		System.out.println(board);
-		board.reroll(lst);
+
 		System.out.println(board);
 	}
 
