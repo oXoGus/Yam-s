@@ -51,34 +51,14 @@ public class ScoreSheet {
 		return validateCombinations.containsKey(pattern);
 	}
 
-	public boolean isCombinaisonLeft (Board board) {
-		var combC = new Chance();
-		if (combC.isValid(board) && !(isValidate(combC)) && !(isSacrified(combC)) ) {
-			return true;
-		}
-		var combF = new FourOfAKind();
-		if (combF.isValid(board) && !(isValidate(combF)) && !(isSacrified(combF)) ) {
-			return true;
-		}
-		var combFu = new FullHouse();
-		if (combFu.isValid(board) && !(isValidate(combFu)) && !(isSacrified(combFu)) ) {
-			return true;
-		}
-		var combL = new LargeStraight();
-		if (combL.isValid(board) && !(isValidate(combL)) && !(isSacrified(combL)) ) {
-			return true;
-		}
-		var combS = new SmallStraight();
-		if (combS.isValid(board) && !(isValidate(combS)) && !(isSacrified(combS)) ) {
-			return true;
-		}
-		var combT = new ThreeOfAKind();
-		if (combT.isValid(board) && !(isValidate(combT)) && !(isSacrified(combT)) ) {
-			return true;
-		}
-		var combY = new Yahtzee();
-		if (combY.isValid(board) && !(isValidate(combY)) && !(isSacrified(combY)) ) {
-			return true;
+	public boolean isCombinaisonPossible (Board board) {
+		// toutes les combi
+		List<Combination> combinations = List.of(new Chance(), new ThreeOfAKind(), new FourOfAKind(), new FullHouse(), new SmallStraight(), new LargeStraight(), new Yahtzee());
+            
+		for (var combination : combinations){
+			if (combination.isValid(board) && !(isValidate(combination)) && !(isSacrified(combination)) ) {
+				return true;
+			}
 		}
 		return false;
 	}

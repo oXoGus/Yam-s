@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Player {
+public class Player implements Comparable<Player> {
 	private final Scanner scanner;
 	private final String userName;
 	private final ScoreSheet scoreSheet;
@@ -90,7 +90,7 @@ public class Player {
 	public void choice() {
 
 		// pas de combinaison possible pour le board
-		if (!scoreSheet.isCombinaisonLeft(board)) {
+		if (!scoreSheet.isCombinaisonPossible(board)) {
 
 			// on sacrifie un combinaison 
 			// qui n'est pas déja sacrifié 
@@ -132,12 +132,47 @@ public class Player {
 		choice();
 	}
 
+	// pour trier les joueurs du plus grand score au plus petit
+	@Override
+	public int compareTo(Player o){
+		return o.scoreSheet.scoreTotal() - scoreSheet.scoreTotal();
+	}
+
+	// toujour pour l'affichage de fin
+	public int lenUserName(){
+		return userName.length();
+	}
+
+	public int lenScore(){
+		return Integer.toString(scoreSheet.scoreTotal()).length();
+	}
+
 	public String result(int playerRanking, int lenMaxPlayerRanking, int lenMaxUserName, int lenMaxScore){
 		// affiche sous forme d'une ligne d'un tableau le placement, le nom et le score du joueur
 		// meme mise en forme que le toString du ScoreSheet
 		// calcule du nombre d'espace apres chaque données
 		// pour avoir la meme taille de colonne
-		return "a faire plus tard";
+		
+		String res =  "| " + playerRanking;
+		int lenPlayerRanking = Integer.toString(playerRanking).length();
+		
+		// nombre d'espace manquant pour que ce soit aligné 
+		for (int i = 0; i < lenMaxPlayerRanking - lenPlayerRanking; i++){
+			res += " ";
+		}
+		res += " | " + userName;
+		
+		for (int i = 0; i < lenMaxUserName - userName.length(); i++){
+			res += " ";
+		}
+		res += " | " + scoreSheet.scoreTotal();
+
+		for (int i = 0; i < lenMaxScore - lenScore(); i++){
+			res += " ";
+		}
+		res += " |\n";
+
+		return res;
 	}
 
 	

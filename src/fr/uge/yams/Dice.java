@@ -11,7 +11,7 @@ public record Dice(int value) {
 	}
 
 	public Dice() {
-		this(new Random().nextInt(5) + 1);
+		this(new Random().nextInt(6) + 1);
 	}
 
 	public Dice reroll() {
