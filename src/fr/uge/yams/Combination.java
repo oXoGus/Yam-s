@@ -12,4 +12,15 @@ public interface Combination {
 		Objects.requireNonNull(board);
 		return board.sum();
 	}
+
+	default int probability (int dicesMissing) {
+		if (dicesMissing < 0 || dicesMissing > 6){
+			throw new IllegalArgumentException();
+		}
+		return dicesMissing*(1/6);
+	}
+
+	default int coefficient (Board board, int dicesMissing) {
+		return score(board)*probability(dicesMissing);
+	}
 }

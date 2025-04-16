@@ -21,6 +21,8 @@ public record FullHouse() implements Combination {
 	}
 
 	public String toString(String state) {
+		Objects.requireNonNull(state);
+
 		// on utilise l'état pour faire un affichage dynamique
 		return "| Fu   | "+ state + "| Full House      | Three of one number and two of another | 25              |\n";
 	}

@@ -13,6 +13,9 @@ public record ThreeOfAKind() implements Combination {
 	}
 
 	public String toString(String state, String score) {
+		Objects.requireNonNull(state);
+		Objects.requireNonNull(score);
+		
 		// on utilise l'état pour faire un affichage dynamique
 		return "| T    | "+ state + "| Three of a Kind | At least three dice the same           | " + score + " |\n";
 	}
