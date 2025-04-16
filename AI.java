@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Random;
 
 public class AI {
     private final Board board; 
     private final ScoreSheet scoreSheet;
     private final Scanner scanner ;
-    private final int type ;
+    private int type ;
 
     public AI () {
         board=new Board();
@@ -18,6 +19,12 @@ public class AI {
         scanner = new Scanner(System.in);
         System.out.println("Please choose your AI by typing its number : \n1. Random \n2. Playing Safe \n3. Playing Risky");
         type=scanner.nextInt();
+        if (type!= 1 && type!=2 && type!=3) {
+            while (type!=1 && type !=2 && type!=3) {
+                System.out.println("Please enter a correct answer");
+                type=scanner.nextInt();
+            }
+        }
         
     }
 
@@ -54,9 +61,12 @@ public class AI {
         return chosen;
     }
     public void playRound() {
+        //Adapter le choix de la combinaison au type d'AI choisi
         board.rerollAllDice();
         //Si il y a une combinaison possible à activer 
         if (scoreSheet.isCombinaisonLeft(board)) {
+            //Si SAFE
+            if (type==2) {
             //On check toutes les combinaisons jusqu'à trouver la bonne
             //S'il y en a plusieurs, on les ajoutes aussi à la map avec leur somme pour choisir après
             HashMap<Combination, Integer> chosen = freeAndValid(board);
@@ -69,11 +79,53 @@ public class AI {
             }
             scoreSheet.addCombination(maxCom, board);
             //Comparer et ajouter la combinaison avec la sum la plus élevée 
+            }
+            //Si l'AI joue de manière Random 
+            else if (type ==1) {
+                //On choisit un nb au hasard qui désigne la combinaison choisie et c'est celle ci qu'on renvoie au addComb
+                HashMap<Combination, Integer> chosen = freeAndValid(board);
+                var nb = new Random().nextInt(chosen.size());
+                var cmp=0;
+                Combination chosenComb = new Chance();
+                for (var comb : chosen.keySet()) {
+                    if (cmp == nb) {
+                        chosenComb=comb;
+                        break;
+                    }
+                    else {
+                        cmp++;
+                    }
+                }
+                scoreSheet.addCombination(chosenComb, board);
+            }
+            else if (type==3) {
+                //Si la combinaison free aux points les plus élevés n'est pas disponible dans free and valid, alors on reroll plutôt que de valider une combinaison
+                var comb = highestScore();
+                if (freeAndValid(board).containsKey(comb)) {
+                    scoreSheet.addCombination(comb, board);
+                }
+                else {
+                    reroll();
+                }
+            }
         }
         else {
             reroll();
         }
         System.out.println(" AI - round : \n" + scoreSheet);
+    }
+
+    public Combination highestScore () {
+        //Chercher le plus haut score dans free combinations, puis retourner la combinaison si elle est dans free and valid, sinon retourner null
+        var combinations = freeCombination();
+        var maxScore = 0;
+        Combination maxComb = new Chance();
+        for (Combination comb : combinations.keySet()) {
+            if (combinations.get(comb)>maxScore) {
+                maxComb=comb;
+            }
+        }
+        return maxComb;
     }
 
 
@@ -112,13 +164,13 @@ public class AI {
         ArrayList<Integer> lst = new ArrayList<Integer>();
         //Si les combinaisons ne sont ni sacrifiées ni activées
         if (!(scoreSheet.isValidate(new LargeStraight())) || !scoreSheet.isSacrified(new LargeStraight()) || !scoreSheet.isValidate(new SmallStraight()) || !scoreSheet.isSacrified(new SmallStraight())) {
-            for (Dice dice : board.fiveDice()) {
-                if (board.fiveDice().contains(new Dice(dice.value()+1))) {
-                    if (!lst.contains(dice.value())) {
-                        lst.add(Integer.valueOf(dice.value()));
+            for (int i = 0; i<5; i++) {
+                if (board.fiveDice().get(i).value()<6 && board.fiveDice().contains(new Dice(board.fiveDice().get(i).value()+1))) {
+                    if (!lst.contains(board.fiveDice().get(i).value())) {
+                        lst.add(Integer.valueOf(i));
                     }
-                    if (!lst.contains(dice.value()+1)) {
-                        lst.add(Integer.valueOf(dice.value()+1));
+                    if (!lst.contains(board.fiveDice().get(i).value()+1)) {
+                        lst.add(Integer.valueOf(board.fiveDice().indexOf(new Dice(board.fiveDice().get(i).value()+1))));
                     }
                 }
             }
@@ -311,12 +363,14 @@ public class AI {
     }
 
 
+    //Pb est la valeur des positions qui sont retournées
+
     //A modifier pour faire selon la valeur du dice 
     public void askReroll(ArrayList<Integer> dicesKept) {
-        HashSet<Integer> lst = new HashSet<Integer>();
+        Set<Integer> lst = new HashSet<Integer>();
         for (Integer i = 0; i<5 ; i++) {
             if (dicesKept.contains(i)==false) {
-                lst.add(i);
+                lst.add(i+1);
             }
         }
         board.reroll(lst);
