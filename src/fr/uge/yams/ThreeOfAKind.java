@@ -12,6 +12,8 @@ public record ThreeOfAKind() implements Combination {
 		return board.maxOcc() >= 3;
 	}
 
+	
+
 	public String toString(String state, String score) {
 		Objects.requireNonNull(state);
 		Objects.requireNonNull(score);

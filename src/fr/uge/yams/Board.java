@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+
 public class Board {
 
 	private final ArrayList<Dice> fiveDice;
@@ -24,8 +25,8 @@ public class Board {
 		}
 	}
 
-	public ArrayList<Dice> fiveDice () {
-		return fiveDice;
+	public List<Dice> fiveDice () {
+		return List.copyOf(fiveDice);
 	}
 
 	// pour les test
@@ -37,7 +38,26 @@ public class Board {
 		}
 	}
 
+	public List<Integer> reverseOcc(){
+		
+	}
 
+	public List<Integer> dicesMaxOcc(){
+		// on met l'index de tous les dés ayant la valeur maxOcc
+		var dices = new ArrayList<Integer>();
+		
+		// valeur de dés qui sont le plus dans board
+		var diceValMaxOcc = occurence().indexOf(maxOcc());
+
+		for (int i = 0; i < 5; i++){
+			var diceVal = fiveDice.get(i).value();
+			
+			if (diceVal == diceValMaxOcc){
+				dices.add(i);
+			}
+		}
+		return List.copyOf(dices);
+	}
 
 	@Override
 	public String toString() {

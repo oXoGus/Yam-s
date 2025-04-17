@@ -1,5 +1,6 @@
 package fr.uge.yams;
 
+import java.util.List;
 import java.util.Objects;
 
 public record FullHouse() implements Combination {
@@ -18,6 +19,14 @@ public record FullHouse() implements Combination {
 		// et les deux autres on la meme valeur 
 		var occList = board.occurence();
 		return occList.contains(3) && occList.contains(2);
+	}
+
+	@Override
+	public List<Integer> dicesMissing(Board board){
+		
+		// occurence   
+		var occ =  board.occurence();
+
 	}
 
 	public String toString(String state) {

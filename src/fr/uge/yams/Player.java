@@ -27,8 +27,9 @@ public class Player implements Comparable<Player> {
 
 	public String[] getDice () {
 
-		System.out.println(userName + "> Do you want to reroll a dice? Type 0 for no, 1-5 to reroll this dice.");
+		System.out.println(userName + "> Do you want to reroll a dice? Type 0 for no, 1-5 to reroll this dice.\n");
 		var choices = scanner.nextLine().split(" ");
+		
 
 		while (!Games.isAllInt(choices) || !Games.userDiceCheck(choices)) {
 			System.out.println(userName + "> Do you want to reroll a dice? Type 0 for no, 1-5 to reroll this dice.");

@@ -1,9 +1,9 @@
 package fr.uge.yams;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class SafeAI implements IA{
+public class SafeAI implements AI{
     private final Board board;
     private final ScoreSheet scoreSheet;
     public SafeAI(){
@@ -13,9 +13,9 @@ public class SafeAI implements IA{
 
     @Override 
     //En fonction de l'IA choisie, on renvoit la liste qu'on va envoyer à Askreroll notamment en fonction de son coeff (probabilité * score)
-    public ArrayList<Integer> probabilityComb () {
-        var arraySame = isSame(board, scoreSheet);
-        var arraySeq = isSequential(scoreSheet, board);
+    public List<Integer> probabilityComb () {
+        var arraySame = diceSameList(board, scoreSheet);
+        var arraySeq = diceSeqList(board, scoreSheet);
         int probaSame = calcComb(dicesMissing(arraySame));
         int probaSeq = calcComb(dicesMissing(arraySeq));
         //On prend les deux listes qui contiennent
@@ -39,7 +39,7 @@ public class SafeAI implements IA{
             if (scoreSheet.isCombinaisonPossible(board)) {
                 break;
             }
-            if (isSame(board, scoreSheet)!=null && isSequential(scoreSheet, board)!=null) {
+            if (diceSameList(board, scoreSheet)!=null && diceSeqList(board, scoreSheet)!=null) {
                 
                 askReroll(probabilityComb(), board);
                 
@@ -47,14 +47,14 @@ public class SafeAI implements IA{
                 //Puis reroll les dices qui ne sont pas dans la liste choisie
     
             }
-            else if (isSequential(scoreSheet, board)!=null) {
+            else if (diceSeqList(board, scoreSheet)!=null) {
                 //reroll les dices qui ne sont pas dans la liste retournée 
-                askReroll(isSequential(scoreSheet, board), board);
+                askReroll(diceSeqList(board, scoreSheet), board);
     
             }
-            else if (isSame(board, scoreSheet)!=null) {
+            else if (diceSameList(board, scoreSheet)!=null) {
                 //reroll les dices qui ne sont pas dans la liste retournée
-                askReroll(isSame(board, scoreSheet), board);
+                askReroll(diceSameList(board, scoreSheet), board);
     
             }
             else {
@@ -101,9 +101,9 @@ public class SafeAI implements IA{
             scoreSheet.addCombination(combination, board);
         }
         else {
-            HashMap<Combination, Integer> freeComb = freeCombination(scoreSheet, board);
+            var freeComb = freeCombinations(scoreSheet, board);
             Combination combination = new Chance();
-            int minSum = 100;
+            double minSum = 100;
             for (var comb : freeComb.keySet()) {
                 if (freeComb.get(comb)<=minSum) {
                     minSum = freeComb.get(comb);

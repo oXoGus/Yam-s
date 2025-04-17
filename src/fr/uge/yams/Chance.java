@@ -14,6 +14,11 @@ public record Chance() implements Combination {
 		return true;
 	}
 
+	@Override
+	public int dicesMissing(Board board) {
+		return 0; // la combi est tjr valide
+	}
+
 	public String toString(String state, String score) {
 		Objects.requireNonNull(state);
 		Objects.requireNonNull(score);
