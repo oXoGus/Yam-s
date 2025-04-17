@@ -15,6 +15,9 @@ public record FourOfAKind() implements Combination {
 
 
 	public String toString(String state, String score) {
+		Objects.requireNonNull(state);
+		Objects.requireNonNull(score);
+
 		// on utilise l'état pour faire un affichage dynamique
 		return "| Fo   | "+ state + "| Four of a Kind  | At least four dice the same            | " + score + " |\n";
 	}

@@ -30,6 +30,8 @@ public record LargeStraight() implements Combination {
 	}
 
 	public String toString(String state) {
+		Objects.requireNonNull(state);
+		
 		// on utilise l'état pour faire un affichage dynamique
 		return "| L    | "+ state + "| Large Straight  | Five sequential dice                   | 40              |\n";
 	}

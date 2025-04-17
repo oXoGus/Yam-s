@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Player {
+public class Player implements Comparable<Player> {
 	private final Scanner scanner;
 	private final String userName;
 	private final ScoreSheet scoreSheet;
@@ -35,22 +35,6 @@ public class Player {
 			choices = scanner.nextLine().split(" ");
 		}
 		return choices;
-	}
-
-	public int lenMaxUserName() {
-		return userName.length();
-	}
-
-	public int lenMaxScore() {
-		//Le score maximal que l'on puisse faire étant 235, il ne sert à rien d'aller plus loin
-		int lenMax = 1 ; 
-		if (scoreSheet.scoreTotal()>9) {
-			lenMax=2;
-			if (scoreSheet.scoreTotal()>99) {
-				lenMax=3;
-			}
-		}
-		return lenMax;
 	}
 
 	
@@ -106,7 +90,7 @@ public class Player {
 	public void choice() {
 
 		// pas de combinaison possible pour le board
-		if (!scoreSheet.isCombinaisonLeft(board)) {
+		if (!scoreSheet.isCombinaisonPossible(board)) {
 
 			// on sacrifie un combinaison 
 			// qui n'est pas déja sacrifié 
@@ -148,35 +132,47 @@ public class Player {
 		choice();
 	}
 
-	public int score () {
-		return scoreSheet.scoreTotal();
+	// pour trier les joueurs du plus grand score au plus petit
+	@Override
+	public int compareTo(Player o){
+		return o.scoreSheet.scoreTotal() - scoreSheet.scoreTotal();
+	}
+
+	// toujour pour l'affichage de fin
+	public int lenUserName(){
+		return userName.length();
+	}
+
+	public int lenScore(){
+		return Integer.toString(scoreSheet.scoreTotal()).length();
 	}
 
 	public String result(int playerRanking, int lenMaxPlayerRanking, int lenMaxUserName, int lenMaxScore){
 		// affiche sous forme d'une ligne d'un tableau le placement, le nom et le score du joueur
 		// meme mise en forme que le toString du ScoreSheet
-		// calcul du nombre d'espace apres chaque données
+		// calcule du nombre d'espace apres chaque données
 		// pour avoir la meme taille de colonne
+		
+		String res =  "| " + playerRanking;
+		int lenPlayerRanking = Integer.toString(playerRanking).length();
+		
+		// nombre d'espace manquant pour que ce soit aligné 
+		for (int i = 0; i < lenMaxPlayerRanking - lenPlayerRanking; i++){
+			res += " ";
+		}
+		res += " | " + userName;
+		
+		for (int i = 0; i < lenMaxUserName - userName.length(); i++){
+			res += " ";
+		}
+		res += " | " + scoreSheet.scoreTotal();
 
-		var s = "| Rank |";
-		for (int i= 0; i<lenMaxPlayerRanking - 4; i++) {
-			s+=" ";
+		for (int i = 0; i < lenMaxScore - lenScore(); i++){
+			res += " ";
 		}
-		s += " Name";
-		for (int i =0; i<lenMaxUserName - 5; i++) {
-			s+= " ";
-		}
-		s+="| Score \n| ";
-		s+= playerRanking+1;
-		for (int i =0; i<5 - lenMaxPlayerRanking; i++);
-		s+=" | ";
-		s+=userName ;
-		for (int i =0; i<lenMaxUserName - userName.length() - 1; i++) {
-			s+= " ";
-		}
-		s+= " | ";
-		s+=scoreSheet.scoreTotal();
-		return s; 
+		res += " |\n";
+
+		return res;
 	}
 
 	

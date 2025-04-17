@@ -26,7 +26,7 @@ public class Games {
 		Objects.requireNonNull(choices);
 
 		for (var nb : choices) {
-			if (Integer.valueOf(nb)>6 || Integer.valueOf(nb)<0) {
+			if (Integer.valueOf(nb)>5 || Integer.valueOf(nb)<0) {
 				return false;
 			}
 		}

@@ -15,6 +15,9 @@ public record Chance() implements Combination {
 	}
 
 	public String toString(String state, String score) {
+		Objects.requireNonNull(state);
+		Objects.requireNonNull(score);
+		
 		// on utilise l'état pour faire un affichage dynamique
 		return "| C    | "+ state + "| Chance          | Any combination                        | " + score + " |\n";
 	}
