@@ -1,89 +1,46 @@
 package fr.uge.yams;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.Scanner;
 
 public interface AI extends User{
     void reroll();
     void playRound();
-    List<Integer> probabilityComb();
-    void choice();
-    
+
     // constantes
     List<Combination> combinations = List.of(new Chance(), new ThreeOfAKind(), new FourOfAKind(), new FullHouse(), new SmallStraight(), new LargeStraight(), new Yahtzee());
     List<Combination> combSame = List.of(new ThreeOfAKind(), new FourOfAKind(), new FullHouse(), new Yahtzee());
     List<Combination> combSeq = List.of(new SmallStraight(), new LargeStraight());
     
 
-    //Renvoie les combinaisons qui sont libres et qui sont valides par rapport aux dés du board
-    default HashMap<Combination, Integer> combinationsFreeAndValid (Board board, ScoreSheet scoreSheet) {
-        Objects.requireNonNull(board);
-        Objects.requireNonNull(scoreSheet);
-
-        HashMap<Combination, Integer> chosen = new HashMap<Combination, Integer>();
-
-        for (var combination : combinations){
-            if (combination.isValid(board) && !(scoreSheet.isValidate(combination)) && !(scoreSheet.isSacrified(combination)) ) {
-                chosen.put(combination, combination.score(board));
-            }
+    public static AI chooseAI(int numAI) { 
+        if (numAI < 0){
+            throw new IllegalArgumentException();
         }
-    
-        return chosen;
-    }
+        System.out.println("Please choose your AI by typing its number : \n1. Random \n2. Playing Safe \n3. Playing Risky");
 
-    //Renvoie true si la combinaison entrée est de type séquentielle 
-    default boolean isSeq (Combination comb) {
-        Objects.requireNonNull(comb);
-
-        // true si comb est un SmallStraight ou un LargeStraight
-        return combSeq.contains(comb);
-    }
-
-    // Fait la demande de reroll en renvoyant les dés qui ne sont pas 
-    // compris dans la liste donnée 
-    // (car on utilise des listes qui contiennent les index des dés à garder )
-    default void askReroll(List<Integer> dicesKept, Board board) {
-        Objects.requireNonNull(board);
-        Objects.requireNonNull(dicesKept);
-
-        Set<Integer> lst = new HashSet<Integer>();
-        String s = "";
-        for (Integer i = 0; i<5 ; i++) {
-            if (!dicesKept.contains(i)) {
-                lst.add(i+1);
-                s += (i + 1) + " ";
-            }
+        var scanner = new Scanner(System.in);
+        String res=scanner.nextLine();
+        
+        // gestions des erreurs
+        while (!Games.isInteger(res) || (Integer.parseInt(res) != 1 && Integer.parseInt(res) !=2 && Integer.parseInt(res) !=3)) {
+            System.out.println("Please enter a correct answer");
+            res=scanner.nextLine();
         }
-        // affichages des dés reroll par l'IA
-        System.out.println(s);
+        var type = Integer.parseInt(res);
+        
+        switch (type) {
+            case 1 : return new RandomAI(numAI);
+            case 2 : return new SafeAI(numAI);
+            default : return new RiskyAI(numAI);
+        }
+	}
 
-        board.reroll(lst);
-    }
     //Retourne le score de l'IA 
-    public int score () ;
-
-    default int calcComb (int diceMissing) {
-        //Calcule la probabilité d'une Combinaison d'arriver
-        return diceMissing*1/6 ;
-    }
-
-    //Renvoie les dés qui sont à reroll (utilisée pour les calculs de probabilité de combinaisons)
-    default int dicesMissing (List<Integer> array) {
-        Objects.requireNonNull(array);
-
-        int cmp = 0;
-        for (int i=0; i<5; i++) {
-            //Si le dés i n'est pas dans la liste de séquence ou de same, alors on ajoute un dés manquant
-            if (!array.contains(i)) {
-                cmp++;
-            }
-        }
-        return cmp;
-    }
+    int score ();
 
     //Retourne les combinaisons qui ne sont pas encore sacrifiées ou activées 
     default HashMap<Combination, Double> freeCombinations (ScoreSheet scoreSheet, Board board) {
@@ -97,86 +54,20 @@ public interface AI extends User{
         
         for (var combinaison : combinations){
             if (!(scoreSheet.isValidate(combinaison)) && !(scoreSheet.isSacrified(combinaison))) {
-                freeComb.put(combinaison, combinaison.coefficient(board, dicesMissing(diceSeqList(board, scoreSheet))));
-                System.out.println(diceSeqList(board, scoreSheet));
-                System.out.println(dicesMissing(diceSeqList(board, scoreSheet)));
+                freeComb.put(combinaison, combinaison.coefficient(board));
             }
         }
         
         return freeComb;
     }
 
-    //On cherche les dés qui forment une séquence dans le board
-    //On vérifie qu'il reste des combinaisons utilisant les séquences
-    //Cherche des séquences
-    //S'il y a plusieurs séquences, on les ajoute à la liste aussi 
-    default List<Integer> diceSeqList(Board board, ScoreSheet scoreSheet) {
-        Objects.requireNonNull(board);
-        Objects.requireNonNull(scoreSheet);
 
-        HashSet<Integer> lst = new HashSet<Integer>();
-        
-        //Si reste des combinaison utilisant des séquences
-        if (scoreSheet.isCombinaisonFree(new SmallStraight()) || scoreSheet.isCombinaisonFree(new LargeStraight())) {
-            
-            var fiveDice = board.fiveDice();
-
-            // on ajoute dans lst les dés dont leurs valeur forme une suite 
-            for (int i = 0; i<5; i++) {
-                var diceVal = fiveDice.get(i).value();
-
-                if (diceVal < 6 && fiveDice.contains(new Dice(diceVal+1))) {
-                    lst.add(i);
-                    lst.add(fiveDice.indexOf(new Dice(diceVal+1)));
-                }
-            }
-            return List.copyOf(lst);
-        }
-        return List.copyOf(new ArrayList<>());
-
-    }
-
-    //On cherche les dés qui forment une séquence de dés identiques, pour cela on vérifie qu'il reste des combinaisons de type identiques, s'il n'y en a pas on retourne la liste vide
-    //Ensuite on vérifie selon leur occurence s'ils se répètent et on les ajoute ou non à la liste qu'on renvoie 
-    default ArrayList<Integer> diceSameList (Board board, ScoreSheet scoreSheet) {
-        Objects.requireNonNull(board);
-        Objects.requireNonNull(scoreSheet);
-
-        ArrayList<Integer> lst = new ArrayList<Integer>();
-
-        // si il est encore possible de valider une combinaison de type Same 
-        if (isCombSameLeft(scoreSheet)) {
-            
-            var lstOcc = board.occurence();
-            for (int i = 0 ; i<6; i++) {
-                if (lstOcc.get(i)>1) {
-                    lst.add(Integer.valueOf(i));
-                }
-            }
-            return lst;
-        }
-        return null;
-    }
-
-    // Vérifie s'il reste des combinaisons de type identique/Same
-    default boolean isCombSameLeft (ScoreSheet scoreSheet) {
-        Objects.requireNonNull(scoreSheet);
-
-        for (var comb : combSame){
-            if ((!scoreSheet.isValidate(comb) && !scoreSheet.isSacrified(comb))) {
-                return true;
-            } 
-        }
-        return false;
-    }
-
-    //Cherche le coeff le plus élevé dans free combinations, puis retourner la combinaison si elle est dans libre and valide
-    default Combination highestScore (ScoreSheet scoreSheet, Board board) {
+    // recherche le la meilleur combi en fonction de son coef
+    default Combination goalCombination(ScoreSheet scoreSheet, Board board) {
         Objects.requireNonNull(board);
         Objects.requireNonNull(scoreSheet);
 
         var combinations = freeCombinations(scoreSheet, board);
-        System.out.println(combinations);
         Combination maxComb = new Chance();
         double maxCoef = 0;
 
@@ -187,61 +78,85 @@ public interface AI extends User{
             break;
         }
 
-        for (Combination comb : combinations.keySet()) {
-            if (combinations.get(comb)>maxCoef) {
-                maxComb=comb;
+        for (var comb : combinations.entrySet()) {
+            if (comb.getValue() > maxCoef) {
+                maxComb=comb.getKey();
+                maxCoef = comb.getValue();
             }
         }
+
+        // combi libre avec le plus grand coef
         return maxComb;
     }
 
-
-    //Trouve le coefficient le plus élevé
-    default Combination findCoeffMax (ScoreSheet scoreSheet, Board board) {
+    // on sacrifie la combi qui avait le coef le plus bas
+    default public Combination sacrifyCombination(ScoreSheet scoreSheet, Board board){
         Objects.requireNonNull(board);
         Objects.requireNonNull(scoreSheet);
 
-        // renvoie la combinaison qui a le plus de chance d'etre réalisable
-        double max = 0;
-        Combination maxC = new Chance();
-        var free = freeCombinations(scoreSheet, board);
-        for (var c : free.keySet()) {
-            if (free.get(c)>=max) {
-                max=free.get(c);
-                maxC = c;
+        var combinations = freeCombinations(scoreSheet, board);
+        Combination minComb = new Chance();
+        double minCoef = 0;
+
+        // on prend comme valeur par défaut les une clé et sa valeur au hasard
+        for (var comb : combinations.entrySet()){
+            minComb = comb.getKey();
+            minCoef = comb.getValue();
+            break;
+        }
+
+        for (var comb : combinations.entrySet()) {
+            if (comb.getValue() < minCoef) {
+                minComb=comb.getKey();
+                minCoef = comb.getValue();
             }
         }
-        return maxC;
+
+        // combi libre avec le plus petit coef
+        return minComb; 
     }
 
-    //Permet de savoir combien de combinaison de type séquentielles ne sont pas encore validées ni sacrifiées
-    default int howManySeq (ScoreSheet scoreSheet, Board board) {
-        Objects.requireNonNull(board);
-        Objects.requireNonNull(scoreSheet);
-
-        int countSeq = 0;
-        var freeComb = freeCombinations(scoreSheet, board);
-        for (var comb : combSeq){
-            if (freeComb.containsKey(comb)) {
-                countSeq ++;
-            }
-        }
-        return countSeq;
-    }
-
-    //Permet de savoir combien de combinaison de type identiques ne sont pas encore validées ou sacrifiées
-    default int howManySame (ScoreSheet scoreSheet, Board board) {
-        Objects.requireNonNull(board);
-        Objects.requireNonNull(scoreSheet);
+    default void printAIActions(Collection<Integer> dicesMissing){
+        Objects.requireNonNull(dicesMissing);
         
-        int countSame = 0;
-        var freeComb = freeCombinations(scoreSheet, board);
-        for (var comb : combSame){
-            if (freeComb.containsKey(comb)) {
-                countSame ++;
-            }
+        String s = username() + ">";
+        for (var dicePos : dicesMissing){
+            s += " " + dicePos;
         }
-        return countSame;
+        System.out.println(s);
     }
+
+    String username();
+
+    @Override
+	default String result(int playerRanking, int lenMaxPlayerRanking, int lenMaxUserName, int lenMaxScore){
+		// affiche sous forme d'une ligne d'un tableau le placement, le nom et le score du joueur
+		// meme mise en forme que le toString du ScoreSheet
+		// calcule du nombre d'espace apres chaque données
+		// pour avoir la meme taille de colonne
+		
+		String res =  "| " + playerRanking;
+		int lenPlayerRanking = Integer.toString(playerRanking).length();
+		
+		// nombre d'espace manquant pour que ce soit aligné 
+		for (int i = 0; i < lenMaxPlayerRanking - lenPlayerRanking; i++){
+			res += " ";
+		}
+		res += " | " + username();
+		
+		for (int i = 0; i < lenMaxUserName - username().length(); i++){
+			res += " ";
+		}
+		res += " | " + score();
+
+		for (int i = 0; i < lenMaxScore - lenScore(); i++){
+			res += " ";
+		}
+		res += " |\n";
+
+		return res;
+    }
+    
+
 
 }

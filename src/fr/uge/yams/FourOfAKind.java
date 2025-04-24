@@ -22,4 +22,11 @@ public record FourOfAKind() implements Combination {
 		return "| Fo   | "+ state + "| Four of a Kind  | At least four dice the same            | " + score + " |\n";
 	}
 
+	@Override
+	public String toString(){
+		return "Four of a kind";
+	}
+
+	
+
 }

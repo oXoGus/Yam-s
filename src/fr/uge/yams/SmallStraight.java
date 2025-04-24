@@ -36,23 +36,40 @@ public record SmallStraight() implements Combination {
 	}
 
 	@Override
-	public List<Integer> dicesMissing (Board board) {
-		ArrayList<Integer> lst = new ArrayList<Integer>();
-		var fiveDiceLst = board.fiveDice();
-		for (Integer i = 0; i<6; i++) {
-			if (fiveDiceLst.get(i).value()<=5) {
-				if (fiveDiceLst.contains(new Dice(fiveDiceLst.get(i).value()+1))) {
-					if (!lst.contains(i)){
-						lst.add(i);
-					}
-					var next = fiveDiceLst.indexOf(new Dice(fiveDiceLst.get(i).value()+1));
-					if (!lst.contains(next)) {
-						lst.add(next);
-					}
-				}
+	public List<Integer> dicesMissing(Board board) {
+		Objects.requireNonNull(board);
+
+		var dicesKept = board.diceFormingSeq();
+		var res = new ArrayList<Integer>();
+		
+		// on créer la list contenant les position 
+		// qui ne sont pas des dicesKept
+		for (int i = 1; i < 6; i++){
+			if (!dicesKept.contains(i)){
+				res.add(i);
 			}
 		}
-		return List.copyOf(lst);
+
+		return List.copyOf(res);
+	}
+
+
+	@Override
+	public double probability (int numDicesMissing) {
+		if (numDicesMissing < 0 || numDicesMissing > 6){
+			throw new IllegalArgumentException();
+		}
+
+		if (numDicesMissing == 0){
+			return 1;
+		}
+	
+		// pour les combi de type seq 
+		// le premier dé a numDicesMissing/6 de chance de tomber un dé qui convient
+		// le deuxieme dé a (numDicesMissing - 1)/6
+		// ...
+		// donc factoriel de numDicesMissing/6
+		return Games.fact(numDicesMissing - 1)/6.0; // il faut bien diviser avec un double puisque int / int = int 
 	}
 
 	
@@ -63,4 +80,8 @@ public record SmallStraight() implements Combination {
 		return "| S    | "+ state + "| Small Straight  | Four sequential dice                   | 30              |\n";
 	}
 
+	@Override
+	public String toString(){
+		return "Small Straight";
+	}
 }

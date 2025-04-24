@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public record Chance() implements Combination {
+public record Chance() implements Combination{
 
 	// utilisation de la méthode score abstraite par défaut
 	
@@ -17,10 +17,18 @@ public record Chance() implements Combination {
 	}
 
 	@Override
+	public double coefficient(Board board) {
+		Objects.requireNonNull(board);
+		return 0; // pour qu'elle ne soit pas choisi en premier mais plutot en dernier recours	
+	}
+
+	@Override
 	public List<Integer> dicesMissing(Board board) {
+		Objects.requireNonNull(board);
 		return List.copyOf(new ArrayList<Integer>()); // la combi est tjr valide
 	}
 
+	
 	public String toString(String state, String score) {
 		Objects.requireNonNull(state);
 		Objects.requireNonNull(score);
@@ -28,5 +36,11 @@ public record Chance() implements Combination {
 		// on utilise l'état pour faire un affichage dynamique
 		return "| C    | "+ state + "| Chance          | Any combination                        | " + score + " |\n";
 	}
+
+	@Override
+	public String toString(){
+		return "Chance";
+	}
+	
 
 }

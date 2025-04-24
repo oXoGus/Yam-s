@@ -1,118 +1,89 @@
 package fr.uge.yams;
 
-import java.util.HashMap;
-import java.util.List;
 
 public class SafeAI implements AI{
     private final Board board;
     private final ScoreSheet scoreSheet;
-    public SafeAI(){
+    private final String username;
+
+    public SafeAI(int numAI){
         board=new Board();
         scoreSheet=new ScoreSheet();
+        username = "Safe AI #" + numAI;
     }
 
-    @Override 
-    //En fonction de l'IA choisie, on renvoit la liste qu'on va envoyer à Askreroll notamment en fonction de son coeff (probabilité * score)
-    public List<Integer> probabilityComb () {
-        var arraySame = diceSameList(board, scoreSheet);
-        var arraySeq = diceSeqList(board, scoreSheet);
-        int probaSame = calcComb(dicesMissing(arraySame));
-        int probaSeq = calcComb(dicesMissing(arraySeq));
-        //On prend les deux listes qui contiennent
-
-        if (probaSame>probaSeq) {
-            return arraySame;
-        }
-        else if (probaSeq>probaSame) {
-            return arraySeq;
-        }
-        else {
-            //Chercher s'il y a plus de Same ou plus de Seq
-            return (howManySame(scoreSheet, board)>howManySeq(scoreSheet, board))?arraySame : arraySeq;
-        } 
-    }
+    
 
     @Override
     public void reroll() {
-        //On reroll tant qu'on a pas de combinaison possible, jusqu'à trois fois maximum
-        for (int i = 0 ; i<3; i++) {
-            if (scoreSheet.isCombinaisonPossible(board)) {
-                break;
-            }
-            if (diceSameList(board, scoreSheet)!=null && diceSeqList(board, scoreSheet)!=null) {
-                
-                askReroll(probabilityComb(), board);
-                
-                //Cherche la somme la plus élevée des deux 
-                //Puis reroll les dices qui ne sont pas dans la liste choisie
-    
-            }
-            else if (diceSeqList(board, scoreSheet)!=null) {
-                //reroll les dices qui ne sont pas dans la liste retournée 
-                askReroll(diceSeqList(board, scoreSheet), board);
-    
-            }
-            else if (diceSameList(board, scoreSheet)!=null) {
-                //reroll les dices qui ne sont pas dans la liste retournée
-                askReroll(diceSameList(board, scoreSheet), board);
-    
-            }
-            else {
-                board.rerollAllDice();
-            }
-            System.out.println(board);
+        
+        //On reroll tant qu'on a pas la combinaison libre qui a le plus de points, sous un maximum de 3 reroll
+        var goalComb = goalCombination(scoreSheet, board);
+        System.out.println("Goal Combination : " + goalComb);
+        
+
+        // on recherche la combi que l'on va sacrifier 
+        // celle qui aura le moins de chance d'etre validé
+        var combinationToSacrify = sacrifyCombination(scoreSheet, board);
+
+        // on essaye de valider cette combi
+        if (goalComb.isValid(board)){
+            
+            // on valide la combi
+            scoreSheet.addCombination(goalComb, board);
+            return;
         }
 
+        for (int i = 0; i<3; i++) {
+            
+            // si elle n'est pas valide
+            var dicesToReroll = goalComb.dicesMissing(board);
+            printAIActions(dicesToReroll);
+            
+            board.reroll(dicesToReroll);
+            System.out.println(board);
+
+
+            // on recalcul le goal combi puisque les proba on changé 
+            if (goalComb != goalCombination(scoreSheet, board)){
+                goalComb = goalCombination(scoreSheet, board);
+                System.out.println("Changing the strategy...");
+                System.out.println("Goal Combination : " + goalComb);
+            }
+            
+
+
+            if (goalComb.isValid(board)){
+
+                // on valide la combi
+                scoreSheet.addCombination(goalComb, board);
+                return;
+            }
+        }
+        if (!scoreSheet.isValidate(new Chance()) && !scoreSheet.isSacrified(new Chance())){
+            scoreSheet.addCombination(new Chance(), board);
+            return;
+        }
+
+        // si on a pas reussit a la valider
+        // on sacrifie la comb qui a le moins de chance d'etre validé
+        scoreSheet.sacrifyCombination(combinationToSacrify, board);
     }
 
     @Override
     public void playRound() {
         //On relance tous les dés et on les affiche
         board.rerollAllDice();
-        System.out.println(board.fiveDice());
+        System.out.println(board);
 
         //On reroll les dés maximum trois fois
         reroll();
-        System.out.println(board.fiveDice());
 
-        //On choisi la combinaison à activer ou sacrifier
-        choice();
 
         System.out.println(scoreSheet);
 
     }
     
-    @Override
-    public void choice() {
-        //Si il y a une combinaison possible, on choisi celle ci, S'il y en a plusieurs on choisi celle avec le score le plus haut
-        if(scoreSheet.isCombinaisonPossible(board)) {
-            //On check toutes les combinaisons jusqu'à trouver la bonne
-            //S'il y en a plusieurs, on les ajoutes aussi à la map avec leur somme pour choisir après
-            HashMap<Combination, Integer> chosen = combinationsFreeAndValid(board, scoreSheet);
-            Combination combination = new Chance();
-            // on trouve la meilleur combinaison si il y en a plusieurs
-            int maxSum = 0; 
-            for (var comb : chosen.keySet()) {
-                if (chosen.get(comb)>maxSum) {
-                    maxSum = chosen.get(comb);
-                    combination = comb;
-                }
-            }
-            scoreSheet.addCombination(combination, board);
-        }
-        else {
-            var freeComb = freeCombinations(scoreSheet, board);
-            Combination combination = new Chance();
-            double minSum = 100;
-            for (var comb : freeComb.keySet()) {
-                if (freeComb.get(comb)<=minSum) {
-                    minSum = freeComb.get(comb);
-                    combination=comb;
-                }
-            }
-            scoreSheet.sacrifyCombination(combination, board);
-        }
-    }
 
     //Retourne la longueur du score
     public int lenScore(){
@@ -126,31 +97,13 @@ public class SafeAI implements AI{
     }
     
     @Override
-    public String result (int playerRanking, int lenMaxPlayerRanking, int lenMaxUserName, int lenMaxScore) {
-        // affiche sous forme d'une ligne d'un tableau le placement, le nom et le score du joueur
-		// meme mise en forme que le toString du ScoreSheet
-		// calcule du nombre d'espace apres chaque données
-		// pour avoir la meme taille de colonne
-		
-		String res =  "| " + playerRanking;
-		int lenPlayerRanking = Integer.toString(playerRanking).length();
-		
-		// nombre d'espace manquant pour que ce soit aligné 
-		for (int i = 0; i < lenMaxPlayerRanking - lenPlayerRanking; i++){
-			res += " ";
-		}
-		res += " | " + "AI";
-		
-		for (int i = 0; i < lenMaxUserName - 2; i++){
-			res += " ";
-		}
-		res += " | " + scoreSheet.scoreTotal();
-
-		for (int i = 0; i < lenMaxScore - lenScore(); i++){
-			res += " ";
-		}
-		res += " |\n";
-
-		return res;
+    public int lenUserName() {
+        return username.length();
     }
+
+    @Override
+    public String username() {
+        return username;
+    }
+    
 }

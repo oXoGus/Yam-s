@@ -25,20 +25,20 @@ public record FullHouse() implements Combination {
 	@Override
 	//Renvoit les index dans fiveDice des dés à reroll
 	public List<Integer> dicesMissing(Board board){
-
 		Objects.requireNonNull(board);
+		
 		var missing = new ArrayList<Integer>();
 		
 		// occurence   
 		var occ =  board.occurence();
 		//L'index i correspond à la valeur i 
 		//A l'index i, occurence du dé i 
-		for (Integer i = 0; i<6; i++) {
+		for (int i = 0; i<5; i++) {
 			//i est l'index des dés dans fiveDices
 			//Si l'occurence de la valeur du dé est de 1
 			//C'est donc le seul et on renvoit ce dés
 			if (occ.get(board.fiveDice().get(i).value())==1) {
-				missing.add(i);
+				missing.add(i + 1);
 			}
 		}
 
@@ -53,4 +53,8 @@ public record FullHouse() implements Combination {
 		return "| Fu   | "+ state + "| Full House      | Three of one number and two of another | 25              |\n";
 	}
 
+	@Override
+	public String toString(){
+		return "Full House";
+	}
 }

@@ -5,9 +5,9 @@ import java.util.Scanner;
 import java.util.Set;
 
 
-public class Player implements Comparable<Player>, User{
+public class Player implements User{
 	private final Scanner scanner;
-	private final String userName;
+	private final String username;
 	private final ScoreSheet scoreSheet;
 	private final Board board;
 
@@ -15,7 +15,7 @@ public class Player implements Comparable<Player>, User{
 
 		// initialisation de tout les champs
 		scanner = new Scanner(System.in);
-		userName = init();
+		username = init();
 		scoreSheet = new ScoreSheet();
 		board = new Board();
 	}
@@ -28,12 +28,12 @@ public class Player implements Comparable<Player>, User{
 
 	public String[] getDice () {
 
-		System.out.println(userName + "> Do you want to reroll a dice? Type 0 for no, 1-5 to reroll this dice.\n");
+		System.out.println(username + "> Do you want to reroll a dice? Type 0 for no, 1-5 to reroll this dice.\n");
 		var choices = scanner.nextLine().split(" ");
 		
 
 		while (!Games.isAllInt(choices) || !Games.userDiceCheck(choices)) {
-			System.out.println(userName + "> Do you want to reroll a dice? Type 0 for no, 1-5 to reroll this dice.");
+			System.out.println(username + "> Do you want to reroll a dice? Type 0 for no, 1-5 to reroll this dice.");
 			choices = scanner.nextLine().split(" ");
 		}
 		return choices;
@@ -58,12 +58,12 @@ public class Player implements Comparable<Player>, User{
 
 	public String askCombination() {
 		System.out.println(scoreSheet);
-		System.out.println(userName + "> Please choose a combination to score in your score sheet by entering its first letter. ");
+		System.out.println(username + "> Please choose a combination to score in your score sheet by entering its first letter. ");
 		var choice = scanner.nextLine();
 
 		// tant que la combinaison n'est pas valide
 		while (Games.parseCombination(choice) == null) {
-			System.out.println(userName + "> Please choose a combination to score in your score sheet by entering its first letter.");
+			System.out.println(username + "> Please choose a combination to score in your score sheet by entering its first letter.");
 			choice = scanner.nextLine();
 		}
 		return choice;
@@ -97,12 +97,12 @@ public class Player implements Comparable<Player>, User{
 			// on sacrifie un combinaison 
 			// qui n'est pas déja sacrifié 
 			// ni validé
-			System.out.println(userName + "> No combination possible, you should sacrifice one.");
+			System.out.println(username + "> No combination possible, you should sacrifice one.");
 			var pattern = Games.parseCombination(askCombination());
 
 			// tant que la combinaison choisi a déja été sacrifié ou validé
 			while (scoreSheet.isSacrified(pattern) || scoreSheet.isValidate(pattern)){
-				System.out.println(userName + "> this combination has already be sacrified, choose a other one");
+				System.out.println(username + "> this combination has already be sacrified, choose a other one");
 				pattern = Games.parseCombination(askCombination());
 			}
 			scoreSheet.sacrifyCombination(pattern, board);
@@ -112,7 +112,7 @@ public class Player implements Comparable<Player>, User{
 
 			// tant que la combinaison choisi a déja été validé et que la combinaison est valide pour le board
 			while (scoreSheet.isValidate(pattern) || !pattern.isValid(board)){
-				System.out.println(userName + "> this combination has already be validated or isn't valid with this board");
+				System.out.println(username + "> this combination has already be validated or isn't valid with this board");
 				pattern = Games.parseCombination(askCombination());
 			}
 			scoreSheet.addCombination(pattern, board);
@@ -124,7 +124,7 @@ public class Player implements Comparable<Player>, User{
 	public void playRound(){
 		// on lance tout les dés 
 		board.rerollAllDice();
-		System.out.println("\n\n" + userName + "'s round :");
+		System.out.println("\n\n" + username + "'s round :");
 		System.out.println(board);
 
 		// le joueur peut relancer jusqu'a 3 fois le nombre de dés qu'il veux
@@ -135,15 +135,9 @@ public class Player implements Comparable<Player>, User{
 		choice();
 	}
 
-	// pour trier les joueurs du plus grand score au plus petit
-	@Override
-	public int compareTo(Player o){
-		return o.scoreSheet.scoreTotal() - scoreSheet.scoreTotal();
-	}
-
 	// toujour pour l'affichage de fin
 	public int lenUserName(){
-		return userName.length();
+		return username.length();
 	}
 
 	public int lenScore(){
@@ -169,9 +163,9 @@ public class Player implements Comparable<Player>, User{
 		for (int i = 0; i < lenMaxPlayerRanking - lenPlayerRanking; i++){
 			res += " ";
 		}
-		res += " | " + userName;
+		res += " | " + username;
 		
-		for (int i = 0; i < lenMaxUserName - userName.length(); i++){
+		for (int i = 0; i < lenMaxUserName - username.length(); i++){
 			res += " ";
 		}
 		res += " | " + scoreSheet.scoreTotal();

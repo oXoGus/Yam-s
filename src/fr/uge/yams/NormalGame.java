@@ -4,17 +4,44 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class NormalGame implements Game {
-    private final ArrayList<Player> players;
+    private final ArrayList<User> users;
     
     public NormalGame(int numPlayer) {
-        players = new ArrayList<>();
+
+        if (numPlayer < 0){
+            throw new IllegalArgumentException();
+        }
+        users = new ArrayList<>();
 
         // initialisation de tout les joueur 
         for (int i = 0; i < numPlayer; i++){
-            System.out.println("Welcome, player " + (i + 1) + ", please enter your name.");
-            players.add(new Player());
+            System.out.println("Welcome, user " + (i + 1) + ", please enter your name.");
+            users.add(new Player());
         }
     }
+
+    public NormalGame(int numPlayer, int numAI) {
+        if (numPlayer < 0 || numAI < 0 || (numPlayer == 0 && numAI == 0)){
+            throw new IllegalArgumentException();
+        }
+        users = new ArrayList<>();
+
+        // initialisation de tout les joueur 
+        for (int i = 0; i < numPlayer; i++){
+            System.out.println("Welcome, user " + (i + 1) + ", please enter your name.");
+            users.add(new Player());
+        }
+
+        // initialisation des IA
+        for (int i = 0; i < numAI; i++){
+            System.out.println("AI #" + (i + 1));
+            users.add(AI.chooseAI(i + 1));
+        }
+        
+    }
+
+    
+
 
     @Override
     public void playRounds(){
@@ -23,33 +50,33 @@ public class NormalGame implements Game {
             System.out.println("Welcome in round " + (roundCounter + 1));
             
             // chaque joueur va jouer son tour 
-            for (var player : players){
-                player.playRound();
+            for (var user : users){
+                user.playRound();
             }
         }
     }
 
     public int lenMaxPlayerRanking(){
-        var maxLen = Integer.toString(players.size()).length();
+        var maxLen = Integer.toString(users.size()).length();
         // si le titre de la colonne est plus grand que le maxLen
         return "rank".length() > maxLen ? "rank".length() : maxLen;
     }
 
     public int lenMaxUserName(){
         int maxLen = 0;
-        for (var player : players){
-            if (player.lenUserName() > maxLen){
-                maxLen = player.lenUserName();
+        for (var user : users){
+            if (user.lenUserName() > maxLen){
+                maxLen = user.lenUserName();
             }
         }
-        return "player".length() > maxLen ? "player".length() :maxLen;
+        return "user".length() > maxLen ? "user".length() :maxLen;
     }
 
     public int lenMaxScore(){
         int maxLen = 0;
-        for (var player : players){
-            if (player.lenScore() > maxLen){
-                maxLen = player.lenScore();
+        for (var user : users){
+            if (user.lenScore() > maxLen){
+                maxLen = user.lenScore();
             }
         }
         return "score".length() > maxLen ? "score".length() :maxLen;
@@ -82,9 +109,9 @@ public class NormalGame implements Game {
 		for (int i = 0; i < lenMaxPlayerRanking() - "rank".length(); i++){
 			res += " ";
 		}
-		res += " | player";
+		res += " | user";
 		
-		for (int i = 0; i < lenMaxUserName() - "player".length(); i++){
+		for (int i = 0; i < lenMaxUserName() - "user".length(); i++){
 			res += " ";
 		}
 		res += " | score";
@@ -102,7 +129,7 @@ public class NormalGame implements Game {
     public void endScreen(){
 
         // les joueurs sont maintenant ordonné du plus grand score au plus petit
-        Collections.sort(players);
+        Collections.sort(users);
 
         var sb = new StringBuilder(); 
 
@@ -117,10 +144,10 @@ public class NormalGame implements Game {
         sb.append(makeTopLine());
         sb.append(br);
 
-        int playerRanking = 1;
-        for (var player : players){
-            sb.append(player.result(playerRanking, lenMaxPlayerRanking, lenMaxUserName, lenMaxScore));
-            playerRanking++;
+        int userRanking = 1;
+        for (var user : users){
+            sb.append(user.result(userRanking, lenMaxPlayerRanking, lenMaxUserName, lenMaxScore));
+            userRanking++;
         }
         sb.append(br);
 

@@ -21,5 +21,10 @@ public record Yahtzee() implements Combination {
 		// on utilise l'état pour faire un affichage dynamique
 		return "| Y    | "+ state + "| Yahtzee         | All five dice the same                 | 50              |\n";
 	}
+	
+	@Override
+	public String toString(){
+		return "Yahtzee";
+	}
 
 }

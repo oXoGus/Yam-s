@@ -1,68 +1,97 @@
 package fr.uge.yams;
 
-import java.util.List;
+import java.util.Objects;
 
 public class RiskyAI implements AI{
     private final Board board;
     private final ScoreSheet scoreSheet;
-    public RiskyAI(){
+    private final String username;
+
+    public RiskyAI(int numAI){
         board=new Board();
         scoreSheet=new ScoreSheet();
+        username = "Risky AI #" + numAI;
     }
-
-    @Override
-    //En fonction de l'IA choisie, on renvoit la liste qu'on va envoyer à Askreroll notamment en fonction de son coeff (probabilité * score)
-    public List<Integer> probabilityComb () {
-        var arraySame = diceSameList(board, scoreSheet);
-        var arraySeq = diceSeqList(board, scoreSheet);
-        int probaSame = calcComb(dicesMissing(arraySame));
-        int probaSeq = calcComb(dicesMissing(arraySeq));
-        //On prend les deux listes qui contiennent
-
-        if (probaSame>probaSeq) {
-            return arraySame;
-        }
-        else if (probaSeq>probaSame) {
-            return arraySeq;
-        }
-        else {
-            //on parcourt la liste des combinaisons possibles et on cherche le coeff le plus élevé 
-            var maxComb = findCoeffMax(scoreSheet, board);
-            //Une fois trouvé, si c'est un same on renvoit arraySame,
-            if (isSeq(maxComb)) {
-                return arraySeq;
-            }
-            else {
-                return arraySame;
-            }
-            //Sinon on retourne arraySeq
-        }
-    }
-
+    
     @Override
     public void reroll() {
+        
         //On reroll tant qu'on a pas la combinaison libre qui a le plus de points, sous un maximum de 3 reroll
-        Combination goalComb = highestScore(scoreSheet, board);
-        System.out.println("goal comb");
-        System.out.println(goalComb);
-        for (int i = 0; i<3; i++) {
-            if (combinationsFreeAndValid(board, scoreSheet).containsKey(goalComb)) {
-                break;
-            }
-            if (isSeq(goalComb)) {
+        var goalComb = goalCombination(scoreSheet, board);
+        System.out.println("Goal Combination : " + goalComb);
+        
 
-                askReroll(diceSeqList(board, scoreSheet), board);
-            }
-            else {
-                askReroll(diceSameList(board, scoreSheet), board);
-            }
-            System.out.println(board);
+        // on recherche la combi que l'on va sacrifier 
+        // celle qui aura le moins de chance d'etre validé
+        var combinationToSacrify = sacrifyCombination(scoreSheet, board);
+
+        // on essaye de valider cette combi
+        if (goalComb.isValid(board)){
+
+            // on valide la combi
+            scoreSheet.addCombination(goalComb, board);
+            return;
         }
+
+        for (int i = 0; i<3; i++) {
+            
+            // si elle n'est pas valide
+            var dicesToReroll = goalComb.dicesMissing(board);
+            printAIActions(dicesToReroll);
+            
+            board.reroll(dicesToReroll);
+            System.out.println(board);
+
+            if (goalComb.isValid(board)){
+
+                // on valide la combi
+                scoreSheet.addCombination(goalComb, board);
+                return;
+            }
+        }
+
+        // si on a fait d'autre combi valides 
+        if (scoreSheet.isCombinaisonPossible(board)){
+
+            // on valide celle qui fait le plus de score
+            scoreSheet.addCombination(getCombinationPossibleMaxScore(board), board); 
+        } 
+        else {
+
+            // si on a pas reussit a valider
+            // on sacrifie la comb qui a le moins de chance d'etre validé
+            scoreSheet.sacrifyCombination(combinationToSacrify, board);
+        }
+    }
+
+    public Combination getCombinationPossibleMaxScore(Board board){
+        Objects.requireNonNull(board);
+        var combiPossible = scoreSheet.combinaisonPossible(board);
+
+        // on prend la combi qui rapporte plus plus de pts
+        var maxComb = combiPossible.get(0);
+        
+        for (var comb : combiPossible){
+            if (comb.score(board) > maxComb.score(board)){
+                maxComb = comb;
+            }
+        }
+        return maxComb;
+    }
+
+    @Override
+    public int lenUserName() {
+        return username.length();
+    }
+
+    @Override
+    public String username() {
+        return username;
     }
 
     @Override
     public void playRound() {
-        System.out.println("AI's round : ");
+        System.out.println(username + "'s round : ");
 
         //On relance tous les dés et on les affiches
         board.rerollAllDice();
@@ -70,37 +99,11 @@ public class RiskyAI implements AI{
 
         //On reroll les dés
         reroll();
-
-        //On choisit la combinaison à activer (celle avec le plus de points) ou celle à sacrifier
-        choice();
         
         System.out.println(scoreSheet);
 
     }
     
-    @Override
-    public void choice() {
-        //On cherche la combinaison avec le coeff (score et proba) le plus élevé
-        //Si il est valide et libre on l'active
-        var comb = highestScore(scoreSheet, board);
-        if (combinationsFreeAndValid(board, scoreSheet).containsKey(comb)) {
-            scoreSheet.addCombination(comb, board);
-        }
-        //Sinon on va chercher la combinaison avec le coeff le plus faible et on la sacrifie
-        else {
-            var freeComb = freeCombinations(scoreSheet, board);
-            Combination combination = new Chance();
-            double minSum = 100;
-            for (var c : freeComb.keySet()) {
-                if (freeComb.get(c)<=minSum) {
-                    minSum = freeComb.get(c);
-                    combination=c;
-                }
-            }
-            scoreSheet.sacrifyCombination(combination, board);
-        }
-    }
-
     public int lenScore(){
         //Renvoit la longueur du score
 		return Integer.toString(scoreSheet.scoreTotal()).length();
@@ -110,34 +113,5 @@ public class RiskyAI implements AI{
     public int score() {
         //retourne le score pour les rang dans duoAI
         return scoreSheet.scoreTotal();
-    }
-    
-    @Override
-    public String result (int playerRanking, int lenMaxPlayerRanking, int lenMaxUserName, int lenMaxScore) {
-        // affiche sous forme d'une ligne d'un tableau le placement, le nom et le score du joueur
-		// meme mise en forme que le toString du ScoreSheet
-		// calcule du nombre d'espace apres chaque données
-		// pour avoir la meme taille de colonne
-		
-		String res =  "| " + playerRanking;
-		int lenPlayerRanking = Integer.toString(playerRanking).length();
-		
-		// nombre d'espace manquant pour que ce soit aligné 
-		for (int i = 0; i < lenMaxPlayerRanking - lenPlayerRanking; i++){
-			res += " ";
-		}
-		res += " | " + "AI";
-		
-		for (int i = 0; i < lenMaxUserName - 2; i++){
-			res += " ";
-		}
-		res += " | " + scoreSheet.scoreTotal();
-
-		for (int i = 0; i < lenMaxScore - lenScore(); i++){
-			res += " ";
-		}
-		res += " |\n";
-
-		return res;
     }
 }

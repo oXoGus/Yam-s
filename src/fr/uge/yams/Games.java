@@ -13,6 +13,16 @@ public class Games {
 		return true;
 	}
 
+	public static int fact(int a){
+		int res = 1;
+		
+		for (int i = 2; i < a; i++){
+			res *= i;
+		}
+		return res;
+	}
+
+	
     public static boolean isAllInt (String[] choices) {
 		for (var nb : choices) {
 			if (!isInteger(nb)) {
@@ -34,6 +44,7 @@ public class Games {
 	}
 
     public static Combination parseCombination(String combinationName) {
+		Objects.requireNonNull(combinationName);
 
 		// ne pas lancer une exception mais reposer la question si default
 		return switch (combinationName) {

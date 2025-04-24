@@ -28,6 +28,7 @@ public class ScoreSheet {
 		}
 	}
 
+
 	public void addCombination(Combination pattern, Board board) {
 		verification(pattern, board);
 		if (!pattern.isValid(board)){
@@ -52,6 +53,7 @@ public class ScoreSheet {
 	}
 
 	public boolean 	isCombinaisonPossible (Board board) {
+		Objects.requireNonNull(board);
 		// toutes les combi
 		List<Combination> combinations = List.of(new Chance(), new ThreeOfAKind(), new FourOfAKind(), new FullHouse(), new SmallStraight(), new LargeStraight(), new Yahtzee());
             
@@ -63,7 +65,23 @@ public class ScoreSheet {
 		return false;
 	}
 
+	// revoie toutes les combinaisons qui peuvent etre validé
+	public List<Combination> combinaisonPossible (Board board) {
+		Objects.requireNonNull(board);
+
+		List<Combination> combinations = List.of(new Chance(), new ThreeOfAKind(), new FourOfAKind(), new FullHouse(), new SmallStraight(), new LargeStraight(), new Yahtzee());
+        
+		var res = new ArrayList<Combination>();
+		for (var combination : combinations){
+			if (combination.isValid(board) && !(isValidate(combination)) && !(isSacrified(combination)) ) {
+				res.add(combination);
+			}
+		}
+		return List.copyOf(res);
+	}
+
 	public boolean isCombinaisonFree(Combination comb){
+		Objects.requireNonNull(comb);
 		return !isValidate(comb) && !isSacrified(comb);
 	}
 
@@ -80,6 +98,8 @@ public class ScoreSheet {
 	}
 
 	public String dynamicScore(Combination pattern){
+		Objects.requireNonNull(pattern);
+		
 		int score = validateCombinations.getOrDefault(pattern, 0);
 		if (score == 0){
 			return "Sum of all dice";

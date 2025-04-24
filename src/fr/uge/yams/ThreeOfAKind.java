@@ -22,4 +22,9 @@ public record ThreeOfAKind() implements Combination {
 		return "| T    | "+ state + "| Three of a Kind | At least three dice the same           | " + score + " |\n";
 	}
 
+	@Override
+	public String toString(){
+		return "Three of a kind";
+	}
+
 }
