@@ -4,27 +4,28 @@ import java.util.Scanner;
 
 public class DuoIA implements Game {
     private final Player player ;
-    private final IA ai ;
+    private final AI ai ;
+    private final Scanner scanner;
 
     //Inititialise une partie entre une IA et un joueur
     public DuoIA(){
         System.out.println("Welcome ! Please enter your name : ");
         player=new Player();
+        scanner = new Scanner(System.in);
         ai = chooseAI();
     }
 
-    public IA chooseAI() {
-        Scanner scanner = new Scanner(System.in);
+    public AI chooseAI() { 
         System.out.println("Please choose your AI by typing its number : \n1. Random \n2. Playing Safe \n3. Playing Risky");
         String res=scanner.nextLine();
         
-        // gesitons des erreurs
+        // gestions des erreurs
         while (!Games.isInteger(res) || (Integer.parseInt(res) != 1 && Integer.parseInt(res) !=2 && Integer.parseInt(res) !=3)) {
             System.out.println("Please enter a correct answer");
             res=scanner.nextLine();
         }
         var type = Integer.parseInt(res);
-        scanner.close();
+        
         switch (type) {
             case 1 : return new RandomAI();
             case 2 : return new SafeAI();
@@ -48,9 +49,22 @@ public class DuoIA implements Game {
     }
 
     //Gère les résultats 
+    //Check quel user a le score supérieur et lui attribut la 1ere place
     @Override 
     public void endScreen(){
         System.out.println("End of the game !\n");
         System.out.println("Here are the results :\n");
+
+        var playerResult = player.result(player.score()>=ai.score()?1:2, 1, player.lenUserName(), player.lenScore());
+        var aiResult = ai.result(ai.score()>=player.score()?1:2, 1, player.lenUserName(), player.lenScore());
+        if (player.score()>=ai.score()) {
+            System.out.println(playerResult);
+            System.out.println(aiResult);
+        }
+        else {
+            System.out.println(aiResult);
+            System.out.println(playerResult);
+        }
+        
     }
 }

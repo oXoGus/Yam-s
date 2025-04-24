@@ -1,9 +1,8 @@
 package fr.uge.yams;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
-public class RiskyAI implements IA{
+public class RiskyAI implements AI{
     private final Board board;
     private final ScoreSheet scoreSheet;
     public RiskyAI(){
@@ -13,9 +12,9 @@ public class RiskyAI implements IA{
 
     @Override
     //En fonction de l'IA choisie, on renvoit la liste qu'on va envoyer à Askreroll notamment en fonction de son coeff (probabilité * score)
-    public ArrayList<Integer> probabilityComb () {
-        var arraySame = isSame(board, scoreSheet);
-        var arraySeq = isSequential(scoreSheet, board);
+    public List<Integer> probabilityComb () {
+        var arraySame = diceSameList(board, scoreSheet);
+        var arraySeq = diceSeqList(board, scoreSheet);
         int probaSame = calcComb(dicesMissing(arraySame));
         int probaSeq = calcComb(dicesMissing(arraySeq));
         //On prend les deux listes qui contiennent
@@ -30,7 +29,7 @@ public class RiskyAI implements IA{
             //on parcourt la liste des combinaisons possibles et on cherche le coeff le plus élevé 
             var maxComb = findCoeffMax(scoreSheet, board);
             //Une fois trouvé, si c'est un same on renvoit arraySame,
-            if (seq(maxComb)) {
+            if (isSeq(maxComb)) {
                 return arraySeq;
             }
             else {
@@ -44,28 +43,33 @@ public class RiskyAI implements IA{
     public void reroll() {
         //On reroll tant qu'on a pas la combinaison libre qui a le plus de points, sous un maximum de 3 reroll
         Combination goalComb = highestScore(scoreSheet, board);
+        System.out.println("goal comb");
+        System.out.println(goalComb);
         for (int i = 0; i<3; i++) {
             if (combinationsFreeAndValid(board, scoreSheet).containsKey(goalComb)) {
                 break;
             }
-            if (seq(goalComb)) {
-                askReroll(isSequential(scoreSheet, board), board);
+            if (isSeq(goalComb)) {
+
+                askReroll(diceSeqList(board, scoreSheet), board);
             }
             else {
-                askReroll(isSame(board, scoreSheet), board);
+                askReroll(diceSameList(board, scoreSheet), board);
             }
+            System.out.println(board);
         }
     }
 
     @Override
     public void playRound() {
+        System.out.println("AI's round : ");
+
         //On relance tous les dés et on les affiches
         board.rerollAllDice();
-        System.out.println(board.fiveDice());
+        System.out.println(board);
 
         //On reroll les dés
         reroll();
-        System.out.println(board.fiveDice());
 
         //On choisit la combinaison à activer (celle avec le plus de points) ou celle à sacrifier
         choice();
@@ -84,9 +88,9 @@ public class RiskyAI implements IA{
         }
         //Sinon on va chercher la combinaison avec le coeff le plus faible et on la sacrifie
         else {
-            HashMap<Combination, Integer> freeComb = freeCombination(scoreSheet, board);
+            var freeComb = freeCombinations(scoreSheet, board);
             Combination combination = new Chance();
-            int minSum = 100;
+            double minSum = 100;
             for (var c : freeComb.keySet()) {
                 if (freeComb.get(c)<=minSum) {
                     minSum = freeComb.get(c);
@@ -95,5 +99,45 @@ public class RiskyAI implements IA{
             }
             scoreSheet.sacrifyCombination(combination, board);
         }
+    }
+
+    public int lenScore(){
+        //Renvoit la longueur du score
+		return Integer.toString(scoreSheet.scoreTotal()).length();
+	}
+
+    @Override
+    public int score() {
+        //retourne le score pour les rang dans duoAI
+        return scoreSheet.scoreTotal();
+    }
+    
+    @Override
+    public String result (int playerRanking, int lenMaxPlayerRanking, int lenMaxUserName, int lenMaxScore) {
+        // affiche sous forme d'une ligne d'un tableau le placement, le nom et le score du joueur
+		// meme mise en forme que le toString du ScoreSheet
+		// calcule du nombre d'espace apres chaque données
+		// pour avoir la meme taille de colonne
+		
+		String res =  "| " + playerRanking;
+		int lenPlayerRanking = Integer.toString(playerRanking).length();
+		
+		// nombre d'espace manquant pour que ce soit aligné 
+		for (int i = 0; i < lenMaxPlayerRanking - lenPlayerRanking; i++){
+			res += " ";
+		}
+		res += " | " + "AI";
+		
+		for (int i = 0; i < lenMaxUserName - 2; i++){
+			res += " ";
+		}
+		res += " | " + scoreSheet.scoreTotal();
+
+		for (int i = 0; i < lenMaxScore - lenScore(); i++){
+			res += " ";
+		}
+		res += " |\n";
+
+		return res;
     }
 }

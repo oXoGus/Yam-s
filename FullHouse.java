@@ -1,5 +1,7 @@
 package fr.uge.yams;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public record FullHouse() implements Combination {
@@ -18,6 +20,30 @@ public record FullHouse() implements Combination {
 		// et les deux autres on la meme valeur 
 		var occList = board.occurence();
 		return occList.contains(3) && occList.contains(2);
+	}
+
+	@Override
+	//Renvoit les index dans fiveDice des dés à reroll
+	public List<Integer> dicesMissing(Board board){
+
+		Objects.requireNonNull(board);
+		var missing = new ArrayList<Integer>();
+		
+		// occurence   
+		var occ =  board.occurence();
+		//L'index i correspond à la valeur i 
+		//A l'index i, occurence du dé i 
+		for (Integer i = 0; i<6; i++) {
+			//i est l'index des dés dans fiveDices
+			//Si l'occurence de la valeur du dé est de 1
+			//C'est donc le seul et on renvoit ce dés
+			if (occ.get(board.fiveDice().get(i).value())==1) {
+				missing.add(i);
+			}
+		}
+
+		return List.copyOf(missing);
+
 	}
 
 	public String toString(String state) {

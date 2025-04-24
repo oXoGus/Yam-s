@@ -1,5 +1,7 @@
 package fr.uge.yams;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public record Chance() implements Combination {
@@ -12,6 +14,11 @@ public record Chance() implements Combination {
 
 		// toutes les combinaisons de dé
 		return true;
+	}
+
+	@Override
+	public List<Integer> dicesMissing(Board board) {
+		return List.copyOf(new ArrayList<Integer>()); // la combi est tjr valide
 	}
 
 	public String toString(String state, String score) {

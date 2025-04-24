@@ -51,7 +51,7 @@ public class ScoreSheet {
 		return validateCombinations.containsKey(pattern);
 	}
 
-	public boolean isCombinaisonPossible (Board board) {
+	public boolean 	isCombinaisonPossible (Board board) {
 		// toutes les combi
 		List<Combination> combinations = List.of(new Chance(), new ThreeOfAKind(), new FourOfAKind(), new FullHouse(), new SmallStraight(), new LargeStraight(), new Yahtzee());
             
@@ -61,6 +61,10 @@ public class ScoreSheet {
 			}
 		}
 		return false;
+	}
+
+	public boolean isCombinaisonFree(Combination comb){
+		return !isValidate(comb) && !isSacrified(comb);
 	}
 
 	// pour l'affichage dynamique du toString()

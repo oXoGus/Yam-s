@@ -1,5 +1,7 @@
 package fr.uge.yams;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public record SmallStraight() implements Combination {
@@ -31,6 +33,26 @@ public record SmallStraight() implements Combination {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<Integer> dicesMissing (Board board) {
+		ArrayList<Integer> lst = new ArrayList<Integer>();
+		var fiveDiceLst = board.fiveDice();
+		for (Integer i = 0; i<6; i++) {
+			if (fiveDiceLst.get(i).value()<=5) {
+				if (fiveDiceLst.contains(new Dice(fiveDiceLst.get(i).value()+1))) {
+					if (!lst.contains(i)){
+						lst.add(i);
+					}
+					var next = fiveDiceLst.indexOf(new Dice(fiveDiceLst.get(i).value()+1));
+					if (!lst.contains(next)) {
+						lst.add(next);
+					}
+				}
+			}
+		}
+		return List.copyOf(lst);
 	}
 
 	
