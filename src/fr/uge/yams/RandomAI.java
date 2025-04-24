@@ -125,4 +125,44 @@ public class RandomAI implements AI{
             scoreSheet.sacrifyCombination(chosenComb, board);
         }
     }
+
+    //Retourne la longueur du score
+    public int lenScore(){
+		return Integer.toString(scoreSheet.scoreTotal()).length();
+	}
+
+    //Retourne le score pour le rang dans duoAI
+    @Override
+    public int score() {
+        return scoreSheet.scoreTotal();
+    }
+    
+    @Override
+    public String result (int playerRanking, int lenMaxPlayerRanking, int lenMaxUserName, int lenMaxScore) {
+        // affiche sous forme d'une ligne d'un tableau le placement, le nom et le score du joueur
+		// meme mise en forme que le toString du ScoreSheet
+		// calcule du nombre d'espace apres chaque données
+		// pour avoir la meme taille de colonne
+		
+		String res =  "| " + playerRanking;
+		int lenPlayerRanking = Integer.toString(playerRanking).length();
+		
+		// nombre d'espace manquant pour que ce soit aligné 
+		for (int i = 0; i < lenMaxPlayerRanking - lenPlayerRanking; i++){
+			res += " ";
+		}
+		res += " | " + "AI";
+		
+		for (int i = 0; i < lenMaxUserName - 2; i++){
+			res += " ";
+		}
+		res += " | " + scoreSheet.scoreTotal();
+
+		for (int i = 0; i < lenMaxScore - lenScore(); i++){
+			res += " ";
+		}
+		res += " |\n";
+
+		return res;
+    }
 }

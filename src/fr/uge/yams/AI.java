@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public interface AI {
+public interface AI extends User{
     void reroll();
     void playRound();
     List<Integer> probabilityComb();
@@ -64,11 +64,7 @@ public interface AI {
         board.reroll(lst);
     }
     //Retourne le score de l'IA 
-    default int score (ScoreSheet scoreSheet) {
-        Objects.requireNonNull(scoreSheet);
-
-        return scoreSheet.scoreTotal();
-    }
+    public int score () ;
 
     default int calcComb (int diceMissing) {
         //Calcule la probabilité d'une Combinaison d'arriver
@@ -136,7 +132,7 @@ public interface AI {
             }
             return List.copyOf(lst);
         }
-        return null;
+        return List.copyOf(new ArrayList<>());
 
     }
 

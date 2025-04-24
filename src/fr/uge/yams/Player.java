@@ -4,7 +4,8 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Player implements Comparable<Player> {
+
+public class Player implements Comparable<Player>, User{
 	private final Scanner scanner;
 	private final String userName;
 	private final ScoreSheet scoreSheet;
@@ -119,6 +120,7 @@ public class Player implements Comparable<Player> {
 		System.out.println(scoreSheet);
 	}
 
+	@Override
 	public void playRound(){
 		// on lance tout les dés 
 		board.rerollAllDice();
@@ -148,6 +150,12 @@ public class Player implements Comparable<Player> {
 		return Integer.toString(scoreSheet.scoreTotal()).length();
 	}
 
+	public int score () {
+		return scoreSheet.scoreTotal();
+	}
+
+
+	@Override
 	public String result(int playerRanking, int lenMaxPlayerRanking, int lenMaxUserName, int lenMaxScore){
 		// affiche sous forme d'une ligne d'un tableau le placement, le nom et le score du joueur
 		// meme mise en forme que le toString du ScoreSheet
@@ -175,6 +183,8 @@ public class Player implements Comparable<Player> {
 
 		return res;
 	}
+
+
 
 	
 

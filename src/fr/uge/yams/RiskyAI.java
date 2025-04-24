@@ -100,4 +100,44 @@ public class RiskyAI implements AI{
             scoreSheet.sacrifyCombination(combination, board);
         }
     }
+
+    public int lenScore(){
+        //Renvoit la longueur du score
+		return Integer.toString(scoreSheet.scoreTotal()).length();
+	}
+
+    @Override
+    public int score() {
+        //retourne le score pour les rang dans duoAI
+        return scoreSheet.scoreTotal();
+    }
+    
+    @Override
+    public String result (int playerRanking, int lenMaxPlayerRanking, int lenMaxUserName, int lenMaxScore) {
+        // affiche sous forme d'une ligne d'un tableau le placement, le nom et le score du joueur
+		// meme mise en forme que le toString du ScoreSheet
+		// calcule du nombre d'espace apres chaque données
+		// pour avoir la meme taille de colonne
+		
+		String res =  "| " + playerRanking;
+		int lenPlayerRanking = Integer.toString(playerRanking).length();
+		
+		// nombre d'espace manquant pour que ce soit aligné 
+		for (int i = 0; i < lenMaxPlayerRanking - lenPlayerRanking; i++){
+			res += " ";
+		}
+		res += " | " + "AI";
+		
+		for (int i = 0; i < lenMaxUserName - 2; i++){
+			res += " ";
+		}
+		res += " | " + scoreSheet.scoreTotal();
+
+		for (int i = 0; i < lenMaxScore - lenScore(); i++){
+			res += " ";
+		}
+		res += " |\n";
+
+		return res;
+    }
 }

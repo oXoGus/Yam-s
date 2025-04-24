@@ -38,10 +38,6 @@ public class Board {
 		}
 	}
 
-	public List<Integer> reverseOcc(){
-		
-	}
-
 	public List<Integer> dicesMaxOcc(){
 		// on met l'index de tous les dés ayant la valeur maxOcc
 		var dices = new ArrayList<Integer>();
