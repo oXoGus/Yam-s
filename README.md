@@ -1,7 +1,3 @@
-* Les noms du binôme  
-* Une description courte du projet  
-* Les instructions pour compiler et exécuter le jeu en mode solo et duo
-
 # Yams
 
 —
