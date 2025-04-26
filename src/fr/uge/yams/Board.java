@@ -68,7 +68,7 @@ public class Board {
 		}
 		builder.append("\n");
 		for (var i = 1; i <= 5; i++) {
-			builder.append(fiveDice.get(i-1).toString());
+			builder.append(fiveDice.get(i-1));
 			builder.append("  ");
 		}
 		builder.append("\n");
@@ -127,7 +127,7 @@ public class Board {
 			// |  5  |  |  1  |  |  5  |  |  2  |  |  3  |  
 			// -------  -------  -------  -------  ------- 
 			// on doit ajouter un des 5 dans la seq 
-			if (!(diceVal == prevVal + 1 || diceVal == prevVal + 1)){
+			if (!(diceVal == prevVal + 1 || diceVal == prevVal + 2)){
 				// on arrete la séquence
 
 				// la sauvegarde si elle est plus grande que 1
@@ -188,6 +188,7 @@ public class Board {
 
 	// revoi un tableau contenant 
 	public List<Integer> occurence(){
+		
 		// on créer un tableau qui contiendra le nombre 
 		// d'occurence de dés de valeur i a l'index i
 		ArrayList<Integer> occLst = new ArrayList<Integer>(List.of(0, 0, 0, 0, 0, 0, 0));
@@ -204,8 +205,8 @@ public class Board {
 
 	public static void main(String[] args) {
 
-		var board = new Board(List.of(1, 1, 3, 4, 5));
-		board.rerollAllDice();
+		var board = new Board(List.of(5, 1, 5, 2, 3));
+		//board.rerollAllDice();
 		System.out.println(board);
 		System.out.println(board.diceFormingSeq());
 

@@ -18,7 +18,7 @@ public class RandomAI implements AI{
     @Override
     //Prend un nombre au hasard entre 0 et 3 inclus et relance ce nombre de fois les dés
     public void reroll() {
-        int nbRounds = new Random().nextInt(4);
+        int nbRounds = new Random().nextInt(3);
         
         // combi visé random
         var freeComb = new ArrayList<Combination>(freeCombinations(scoreSheet, board).keySet()); 

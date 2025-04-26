@@ -31,9 +31,11 @@ public record FullHouse() implements Combination {
 		
 		// occurence   
 		var occ =  board.occurence();
+
 		//L'index i correspond à la valeur i 
 		//A l'index i, occurence du dé i 
 		for (int i = 0; i<5; i++) {
+			
 			//i est l'index des dés dans fiveDices
 			//Si l'occurence de la valeur du dé est de 1
 			//C'est donc le seul et on renvoit ce dés

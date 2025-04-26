@@ -7,7 +7,7 @@ import java.util.Objects;
 public record Chance() implements Combination{
 
 	// utilisation de la méthode score abstraite par défaut
-	
+
 	@Override
 	public boolean isValid(Board board) {
 		Objects.requireNonNull(board);
@@ -19,7 +19,7 @@ public record Chance() implements Combination{
 	@Override
 	public double coefficient(Board board) {
 		Objects.requireNonNull(board);
-		return 0; // pour qu'elle ne soit pas choisi en premier mais plutot en dernier recours	
+		return 0; // pour qu'elle ne soit pas choisi mais plutot en dernier recours	
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public record Chance() implements Combination{
 		Objects.requireNonNull(score);
 		
 		// on utilise l'état pour faire un affichage dynamique
-		return "| C    | "+ state + "| Chance          | Any combination                        | " + score + " |\n";
+		return "| C    | " + state + "| Chance          | Any combination                        | " + score + " |\n";
 	}
 
 	@Override

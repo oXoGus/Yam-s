@@ -34,7 +34,7 @@ public class SafeAI implements AI{
             return;
         }
 
-        for (int i = 0; i<3; i++) {
+        for (int i = 0; i<2; i++) {
             
             // si elle n'est pas valide
             var dicesToReroll = goalComb.dicesMissing(board);

@@ -49,7 +49,7 @@ public interface AI extends User{
 
         // hashMap contenant toutes le combinaison 
         // qui ne sont pas encore validé ou sacrifié
-        // avec leurs pcoeff
+        // avec leurs coeff
         var freeComb = new HashMap<Combination, Double>();
         
         for (var combinaison : combinations){
@@ -96,19 +96,17 @@ public interface AI extends User{
 
         var combinations = freeCombinations(scoreSheet, board);
         Combination minComb = new Chance();
-        double minCoef = 0;
+        
 
         // on prend comme valeur par défaut les une clé et sa valeur au hasard
         for (var comb : combinations.entrySet()){
             minComb = comb.getKey();
-            minCoef = comb.getValue();
             break;
         }
 
         for (var comb : combinations.entrySet()) {
-            if (comb.getValue() < minCoef) {
+            if (comb.getValue() < minComb.coefficient(board)) {
                 minComb=comb.getKey();
-                minCoef = comb.getValue();
             }
         }
 
@@ -156,7 +154,5 @@ public interface AI extends User{
 
 		return res;
     }
-    
-
 
 }
