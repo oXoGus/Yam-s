@@ -2,7 +2,7 @@ package fr.uge.yams;
 
 import java.util.Random;
 
-public record Dice(int value) {
+public record Dice(int value) implements GameElement{
 
 	public Dice {
 		if (value > 6 || value < 1) {

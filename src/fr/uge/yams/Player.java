@@ -1,23 +1,31 @@
 package fr.uge.yams;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
 
+import fr.uge.yams.combinations.Combination;
 
-public class Player implements User{
+
+public class Player implements User {
 	private final Scanner scanner;
 	private final String username;
 	private final ScoreSheet scoreSheet;
 	private final Board board;
 
-	public Player() {
+
+	// passe les éléments de jeu en paramètre pour qu'il puisse dépendre du mode de jeu
+	public Player(List<Combination> combinaitionChosen, Board boardType) {
+		Objects.requireNonNull(combinaitionChosen);
+		Objects.requireNonNull(boardType);
 
 		// initialisation de tout les champs
 		scanner = new Scanner(System.in);
 		username = init();
-		scoreSheet = new ScoreSheet();
-		board = new Board();
+		scoreSheet = new ScoreSheet(combinaitionChosen);
+		board = boardType;
 	}
 	
 
@@ -123,7 +131,7 @@ public class Player implements User{
 	@Override
 	public void playRound(){
 		// on lance tout les dés 
-		board.rerollAllDice();
+		board.rerollAll();
 		System.out.println("\n\n" + username + "'s round :");
 		System.out.println(board);
 
@@ -177,9 +185,4 @@ public class Player implements User{
 
 		return res;
 	}
-
-
-
-	
-
 }

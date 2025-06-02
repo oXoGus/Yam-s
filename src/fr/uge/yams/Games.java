@@ -2,6 +2,15 @@ package fr.uge.yams;
 
 import java.util.Objects;
 
+import fr.uge.yams.combinations.Chance;
+import fr.uge.yams.combinations.Combination;
+import fr.uge.yams.combinations.FourOfAKind;
+import fr.uge.yams.combinations.FullHouse;
+import fr.uge.yams.combinations.LargeStraight;
+import fr.uge.yams.combinations.SmallStraight;
+import fr.uge.yams.combinations.ThreeOfAKind;
+import fr.uge.yams.combinations.Yahtzee;
+
 // classe contenant des méthodes static utiles pour tous les modes de jeu
 public class Games {
     public static boolean isInteger (String s) {
@@ -43,19 +52,5 @@ public class Games {
 		return true;
 	}
 
-    public static Combination parseCombination(String combinationName) {
-		Objects.requireNonNull(combinationName);
-
-		// ne pas lancer une exception mais reposer la question si default
-		return switch (combinationName) {
-            case "T" -> new ThreeOfAKind();
-            case "Fu" -> new FullHouse();
-            case "Fo" -> new FourOfAKind();
-            case "L" -> new LargeStraight();
-            case "S" -> new SmallStraight();
-            case "C" -> new Chance();
-            case "Y" -> new Yahtzee();
-            default -> null; // null par défaut pour la gestion des erreurs 
-		};
-	}
+    
 }

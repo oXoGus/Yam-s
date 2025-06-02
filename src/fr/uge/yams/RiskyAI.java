@@ -1,15 +1,21 @@
 package fr.uge.yams;
 
+import java.util.List;
 import java.util.Objects;
+
+import fr.uge.yams.combinations.Combination;
 
 public class RiskyAI implements AI{
     private final Board board;
     private final ScoreSheet scoreSheet;
     private final String username;
 
-    public RiskyAI(int numAI){
-        board=new Board();
-        scoreSheet=new ScoreSheet();
+    public RiskyAI(int numAI, List<Combination> combinaitionChosen, Board boardType){
+        Objects.requireNonNull(combinaitionChosen);
+        Objects.requireNonNull(boardType);
+        
+        board=boardType;
+        scoreSheet = new ScoreSheet(combinaitionChosen);
         username = "Risky AI #" + numAI;
     }
     
@@ -94,7 +100,7 @@ public class RiskyAI implements AI{
         System.out.println(username + "'s round : ");
 
         //On relance tous les dés et on les affiches
-        board.rerollAllDice();
+        board.rerollAll();
         System.out.println(board);
 
         //On reroll les dés

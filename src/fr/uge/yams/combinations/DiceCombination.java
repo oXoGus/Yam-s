@@ -1,11 +1,13 @@
-package fr.uge.yams;
+package fr.uge.yams.combinations;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import fr.uge.yams.Board;
 
-public interface Combination {
+
+public interface DiceCombination extends Combination{
 	
 	// methode de verification
 	boolean isValid(Board board);
@@ -52,7 +54,7 @@ public interface Combination {
 		}
 
 		// la liste des index des dés qui on le plus d'occurence 
-		var dicesMaxOcc = board.dicesMaxOcc();
+		var dicesMaxOcc = board.elementsMaxOcc();
 		
 		// les dés qu'on peut reroll sont donc 
 		// tous les dés qui ne sont pas dans 
@@ -65,4 +67,6 @@ public interface Combination {
 		}
 		return List.copyOf(dicesToReroll);
 	}	
+
+	String toString(String state, String score);
 }

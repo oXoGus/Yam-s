@@ -1,16 +1,23 @@
 package fr.uge.yams;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
+
+import fr.uge.yams.combinations.Combination;
 
 public class RandomAI implements AI{
     private final Board board;
     private final ScoreSheet scoreSheet;
     private final String username;
 
-    public RandomAI(int numAI){
-        board=new Board();
-        scoreSheet=new ScoreSheet();
+    public RandomAI(int numAI, List<Combination> combinaitionChosen, Board boardType){
+        Objects.requireNonNull(combinaitionChosen);
+        Objects.requireNonNull(boardType);
+        
+        board=boardType;
+        scoreSheet = new ScoreSheet(combinaitionChosen);
         username = "Random AI #" + numAI;
     }
 
@@ -56,7 +63,7 @@ public class RandomAI implements AI{
     @Override
     public void playRound() {
         //On relance les dés et on les affiche
-        board.rerollAllDice();
+        board.rerollAll();
         System.out.println(board);
 
         //On reroll pour potentiellement relancer les dés

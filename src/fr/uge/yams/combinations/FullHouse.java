@@ -1,10 +1,12 @@
-package fr.uge.yams;
+package fr.uge.yams.combinations;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public record FullHouse() implements Combination {
+import fr.uge.yams.Board;
+
+public record FullHouse() implements DiceCombination {
 
 	@Override
 	public int score(Board board) {
@@ -20,6 +22,12 @@ public record FullHouse() implements Combination {
 		// et les deux autres on la meme valeur 
 		var occList = board.occurence();
 		return occList.contains(3) && occList.contains(2);
+	}
+
+	@Override
+	public String code(){
+		// code pour parse les combinisons dans le terminal
+		return "Fu";
 	}
 
 	@Override
@@ -39,7 +47,7 @@ public record FullHouse() implements Combination {
 			//i est l'index des dés dans fiveDices
 			//Si l'occurence de la valeur du dé est de 1
 			//C'est donc le seul et on renvoit ce dés
-			if (occ.get(board.fiveDice().get(i).value())==1) {
+			if (occ.get(board.getElementsList().get(i).value())==1) {
 				missing.add(i + 1);
 			}
 		}
@@ -48,9 +56,10 @@ public record FullHouse() implements Combination {
 
 	}
 
-	public String toString(String state) {
+	public String toString(String state, String score) {
 		Objects.requireNonNull(state);
-
+		Objects.requireNonNull(score);
+		
 		// on utilise l'état pour faire un affichage dynamique
 		return "| Fu   | "+ state + "| Full House      | Three of one number and two of another | 25              |\n";
 	}

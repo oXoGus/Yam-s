@@ -1,8 +1,10 @@
-package fr.uge.yams;
+package fr.uge.yams.combinations;
 
 import java.util.Objects;
 
-public record ThreeOfAKind() implements Combination {
+import fr.uge.yams.Board;
+
+public record ThreeOfAKind() implements DiceCombination {
 
 	// utilisation de la méthode abstraite par défaut
 	
@@ -12,7 +14,11 @@ public record ThreeOfAKind() implements Combination {
 		return board.maxOcc() >= 3;
 	}
 
-	
+	@Override
+	public String code(){
+		// code pour parse les combinisons dans le terminal
+		return "T";
+	}
 
 	public String toString(String state, String score) {
 		Objects.requireNonNull(state);

@@ -1,10 +1,13 @@
-package fr.uge.yams;
+package fr.uge.yams.combinations;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public record LargeStraight() implements Combination {
+import fr.uge.yams.Board;
+import fr.uge.yams.Games;
+
+public record LargeStraight() implements DiceCombination {
 
 	@Override
 	public int score(Board board) {
@@ -35,7 +38,7 @@ public record LargeStraight() implements Combination {
 	public List<Integer> dicesMissing(Board board) {
 		Objects.requireNonNull(board);
 
-		var dicesKept = board.diceFormingSeq();
+		var dicesKept = board.elementsFormingSeq();
 		var res = new ArrayList<Integer>();
 		
 		// on créer la list contenant les position 
@@ -47,6 +50,12 @@ public record LargeStraight() implements Combination {
 		}
 
 		return List.copyOf(res);
+	}
+
+	@Override
+	public String code(){
+		// code pour parse les combinisons dans le terminal
+		return "L";
 	}
 
 	@Override
@@ -67,8 +76,9 @@ public record LargeStraight() implements Combination {
 		return Games.fact(numDicesMissing)/6.0;
 	}
 
-	public String toString(String state) {
+	public String toString(String state, String score) {
 		Objects.requireNonNull(state);
+		Objects.requireNonNull(score);
 		
 		// on utilise l'état pour faire un affichage dynamique
 		return "| L    | "+ state + "| Large Straight  | Five sequential dice                   | 40              |\n";

@@ -1,10 +1,12 @@
-package fr.uge.yams;
+package fr.uge.yams.combinations;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public record Chance() implements Combination{
+import fr.uge.yams.Board;
+
+public record Chance() implements DiceCombination{
 
 	// utilisation de la méthode score abstraite par défaut
 
@@ -14,6 +16,11 @@ public record Chance() implements Combination{
 
 		// toutes les combinaisons de dé
 		return true;
+	}
+
+	@Override
+	public String code(){
+		return "C";
 	}
 
 	@Override

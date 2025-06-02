@@ -1,8 +1,10 @@
-package fr.uge.yams;
+package fr.uge.yams.combinations;
 
 import java.util.Objects;
 
-public record FourOfAKind() implements Combination {
+import fr.uge.yams.Board;
+
+public record FourOfAKind() implements DiceCombination {
 
 	// utilisation de la méthode score abstraite par défaut
 	
@@ -13,7 +15,12 @@ public record FourOfAKind() implements Combination {
 		return board.maxOcc() >= 4;
 	}
 
+	@Override
+	public String code(){
+		return "Fo";
+	}
 
+	@Override
 	public String toString(String state, String score) {
 		Objects.requireNonNull(state);
 		Objects.requireNonNull(score);

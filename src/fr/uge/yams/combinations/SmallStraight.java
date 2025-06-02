@@ -1,10 +1,13 @@
-package fr.uge.yams;
+package fr.uge.yams.combinations;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public record SmallStraight() implements Combination {
+import fr.uge.yams.Board;
+import fr.uge.yams.Games;
+
+public record SmallStraight() implements DiceCombination {
 
 	@Override
 	public int score(Board board) {
@@ -39,7 +42,7 @@ public record SmallStraight() implements Combination {
 	public List<Integer> dicesMissing(Board board) {
 		Objects.requireNonNull(board);
 
-		var dicesKept = board.diceFormingSeq();
+		var dicesKept = board.elementsFormingSeq();
 		var res = new ArrayList<Integer>();
 		
 		// on créer la list contenant les position 
@@ -51,6 +54,12 @@ public record SmallStraight() implements Combination {
 		}
 
 		return List.copyOf(res);
+	}
+
+	@Override
+	public String code(){
+		// code pour parse les combinisons dans le terminal
+		return "S";
 	}
 
 
@@ -73,8 +82,9 @@ public record SmallStraight() implements Combination {
 	}
 
 	
-	public String toString(String state) {
+	public String toString(String state, String score) {
 		Objects.requireNonNull(state);
+		Objects.requireNonNull(score);
 		
 		// on utilise l'état pour faire un affichage dynamique
 		return "| S    | "+ state + "| Small Straight  | Four sequential dice                   | 30              |\n";

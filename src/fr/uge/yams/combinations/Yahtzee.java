@@ -1,8 +1,10 @@
-package fr.uge.yams;
+package fr.uge.yams.combinations;
 
 import java.util.Objects;
 
-public record Yahtzee() implements Combination {
+import fr.uge.yams.Board;
+
+public record Yahtzee() implements DiceCombination {
 
 	@Override
 	public int score(Board board) {
@@ -16,8 +18,15 @@ public record Yahtzee() implements Combination {
 		return board.maxOcc() == 5;
 	}
 
+	@Override
+	public String code(){
+		// code pour parse les combinisons dans le terminal
+		return "Y";
+	}
 
-	public String toString(String state) {
+	public String toString(String state, String score) {
+		Objects.requireNonNull(state);
+		Objects.requireNonNull(score);
 		// on utilise l'état pour faire un affichage dynamique
 		return "| Y    | "+ state + "| Yahtzee         | All five dice the same                 | 50              |\n";
 	}

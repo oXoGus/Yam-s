@@ -1,14 +1,22 @@
 package fr.uge.yams;
 
+import java.util.List;
+import java.util.Objects;
+
+import fr.uge.yams.combinations.Chance;
+import fr.uge.yams.combinations.Combination;
 
 public class SafeAI implements AI{
     private final Board board;
     private final ScoreSheet scoreSheet;
     private final String username;
 
-    public SafeAI(int numAI){
-        board=new Board();
-        scoreSheet=new ScoreSheet();
+    public SafeAI(int numAI, List<Combination> combinaitionChosen, Board boardType){
+        Objects.requireNonNull(combinaitionChosen);
+        Objects.requireNonNull(boardType);
+        
+        board=boardType;
+        scoreSheet = new ScoreSheet(combinaitionChosen);
         username = "Safe AI #" + numAI;
     }
 
@@ -73,7 +81,7 @@ public class SafeAI implements AI{
     @Override
     public void playRound() {
         //On relance tous les dés et on les affiche
-        board.rerollAllDice();
+        board.rerollAll();
         System.out.println(board);
 
         //On reroll les dés maximum trois fois

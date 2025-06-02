@@ -6,6 +6,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+import fr.uge.yams.combinations.Chance;
+import fr.uge.yams.combinations.Combination;
+import fr.uge.yams.combinations.FourOfAKind;
+import fr.uge.yams.combinations.FullHouse;
+import fr.uge.yams.combinations.LargeStraight;
+import fr.uge.yams.combinations.SmallStraight;
+import fr.uge.yams.combinations.ThreeOfAKind;
+import fr.uge.yams.combinations.Yahtzee;
+
 public interface AI extends User{
     void reroll();
     void playRound();
@@ -16,7 +25,7 @@ public interface AI extends User{
     List<Combination> combSeq = List.of(new SmallStraight(), new LargeStraight());
     
 
-    public static AI chooseAI(int numAI) { 
+    public static AI chooseAI(int numAI, List<Combination> combinationsChosen, Board boardType) { 
         if (numAI < 0){
             throw new IllegalArgumentException();
         }
@@ -33,9 +42,9 @@ public interface AI extends User{
         var type = Integer.parseInt(res);
         
         switch (type) {
-            case 1 : return new RandomAI(numAI);
-            case 2 : return new SafeAI(numAI);
-            default : return new RiskyAI(numAI);
+            case 1 : return new RandomAI(numAI, combinationsChosen, boardType);
+            case 2 : return new SafeAI(numAI, combinationsChosen, boardType);
+            default : return new RiskyAI(numAI, combinationsChosen, boardType);
         }
 	}
 

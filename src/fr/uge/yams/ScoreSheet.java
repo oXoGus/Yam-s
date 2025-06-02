@@ -5,58 +5,102 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import fr.uge.yams.combinations.CardCombination;
+import fr.uge.yams.combinations.Combination;
+import fr.uge.yams.combinations.DiceCombination;
+
+
 
 public class ScoreSheet {
 
-	private final HashMap<Combination, Integer> validateCombinations = new HashMap<>();
+	// la listes des combinaisons pour cette scoreSheet
+	private final List<Combination> combinations;
+
+	private final HashMap<Combination, Integer> validateDiceCombinations = new HashMap<>();
 
 	// pas besoin de stocker le score 
-	private final ArrayList<Combination> sacrifiedCombination = new ArrayList<>();
+	private final ArrayList<Combination> sacrifiedDiceCombination = new ArrayList<>();
+
+	// on utilise la surcharge pour etre sur que la liste des combinaison 
+	// soit entièrement de DiceCombination 
+	// ou de CardCombination
+	public ScoreSheet(List<DiceCombination> combinations){
+		Objects.requireNonNull(combinations);
+
+		if (combinations.isEmpty()){
+			throw new IllegalArgumentException("You must have at least one combination in your ScoreSheet");
+		}
+		this.combinations = List.copyOf(combinations);
+	}
+
+	public ScoreSheet(List<CardCombination> combinations, int a){
+		Objects.requireNonNull(combinations);
+
+		if (combinations.isEmpty()){
+			throw new IllegalArgumentException("You must have at least one combination in your ScoreSheet");
+		}
+		this.combinations = List.copyOf(combinations);
+	}
+
+	public void requirePatternInDiceCombinations(Combination pattern){
+		Objects.requireNonNull(pattern);
+		
+		// on force que les combinaison passé en param fasse partie de la liste des combinaisons 
+		if (!combinations.contains(pattern)){
+			throw new IllegalArgumentException("this combinaison does not correspond to the combinaisons in this ScorSheet");
+		}
+	}
 
 	// fonction pour verifier si le patterne et le board sont valide
-	// pour éviter la répétition de code dans addCombination et sacrifyCombination 
+	// pour éviter la répétition de code dans addDiceCombination et sacrifyDiceCombination 
 	public void verification(Combination pattern, Board board){
 		Objects.requireNonNull(pattern);
 		Objects.requireNonNull(board);
 
 		// gestion des erreurs
-		if (validateCombinations.containsKey(pattern)) {
+		if (validateDiceCombinations.containsKey(pattern) && combinations.contains(pattern)) {
 			throw new IllegalArgumentException("already a score for this combination");
 		}
-		if (sacrifiedCombination.contains(pattern)){
+		if (sacrifiedDiceCombination.contains(pattern) && combinations.contains(pattern)){
 			throw new IllegalArgumentException("this combiantion is already sacrified");
 		}
 	}
 
-
 	public void addCombination(Combination pattern, Board board) {
+		requirePatternInDiceCombinations(pattern);
 		verification(pattern, board);
 		if (!pattern.isValid(board)){
 			throw new IllegalArgumentException("this combination is not valid with this board");
 		}
-		validateCombinations.put(pattern, pattern.score(board));
+
+		validateDiceCombinations.put(pattern, pattern.score(board));
 	}
 
 	public void sacrifyCombination(Combination pattern, Board board){
 		verification(pattern, board);
-		sacrifiedCombination.add(pattern);
+		requirePatternInDiceCombinations(pattern);
+
+		sacrifiedDiceCombination.add(pattern);
 	}
 
 	public boolean isSacrified(Combination pattern){
 		Objects.requireNonNull(pattern);
-		return sacrifiedCombination.contains(pattern);
+		requirePatternInDiceCombinations(pattern);
+
+		return sacrifiedDiceCombination.contains(pattern);
 	}
 
 	public boolean isValidate(Combination pattern){
 		Objects.requireNonNull(pattern);
-		return validateCombinations.containsKey(pattern);
+		requirePatternInDiceCombinations(pattern);
+
+		return validateDiceCombinations.containsKey(pattern);
 	}
 
-	public boolean 	isCombinaisonPossible (Board board) {
+	public boolean isCombinaisonPossible (Board board) {
 		Objects.requireNonNull(board);
+
 		// toutes les combi
-		List<Combination> combinations = List.of(new Chance(), new ThreeOfAKind(), new FourOfAKind(), new FullHouse(), new SmallStraight(), new LargeStraight(), new Yahtzee());
-            
 		for (var combination : combinations){
 			if (combination.isValid(board) && !(isValidate(combination)) && !(isSacrified(combination)) ) {
 				return true;
@@ -69,8 +113,6 @@ public class ScoreSheet {
 	public List<Combination> combinaisonPossible (Board board) {
 		Objects.requireNonNull(board);
 
-		List<Combination> combinations = List.of(new Chance(), new ThreeOfAKind(), new FourOfAKind(), new FullHouse(), new SmallStraight(), new LargeStraight(), new Yahtzee());
-        
 		var res = new ArrayList<Combination>();
 		for (var combination : combinations){
 			if (combination.isValid(board) && !(isValidate(combination)) && !(isSacrified(combination)) ) {
@@ -82,25 +124,30 @@ public class ScoreSheet {
 
 	public boolean isCombinaisonFree(Combination comb){
 		Objects.requireNonNull(comb);
+		requirePatternInDiceCombinations(comb);
+
 		return !isValidate(comb) && !isSacrified(comb);
 	}
 
 	// pour l'affichage dynamique du toString()
 	public String state(Combination pattern){
 		Objects.requireNonNull(pattern);
+		requirePatternInDiceCombinations(pattern);
+
 		if (isValidate(pattern)){
-			return "validate  ";
+			return "validate";
 		}
 		if (isSacrified(pattern)){
-			return "sacrified ";
+			return "sacrified";
 		}
 		return "          ";
 	}
 
 	public String dynamicScore(Combination pattern){
 		Objects.requireNonNull(pattern);
+		requirePatternInDiceCombinations(pattern);
 		
-		int score = validateCombinations.getOrDefault(pattern, 0);
+		int score = validateDiceCombinations.getOrDefault(pattern, 0);
 		if (score == 0){
 			return "Sum of all dice";
 		}
@@ -111,7 +158,7 @@ public class ScoreSheet {
 	}
 
 	public int scoreTotal() {
-		return validateCombinations.values().stream().mapToInt(Integer::intValue).sum();
+		return validateDiceCombinations.values().stream().mapToInt(Integer::intValue).sum();
 	}
 
 
@@ -127,27 +174,28 @@ public class ScoreSheet {
 		s += "| code | state     | name            | descripton                             | score           |\n";
 		s += sep;
 
-		s += new Chance().toString(state(new Chance()), dynamicScore(new Chance()));
-		s += new ThreeOfAKind().toString(state(new ThreeOfAKind()), dynamicScore(new ThreeOfAKind()));
-		s += new FourOfAKind().toString(state(new FourOfAKind()), dynamicScore(new FourOfAKind()));
-		s += new FullHouse().toString(state(new FullHouse()));
-		s += new SmallStraight().toString(state(new SmallStraight()));
-		s += new LargeStraight().toString(state(new LargeStraight()));
-		s += new Yahtzee().toString(state(new Yahtzee()));
+		// on met uniquement les combinaisons choisi
+		for (var comb : combinations){
+			s += comb.toString(state(comb), dynamicScore(comb));
+		}
 		s += sep;
 		return s;
 
 	}
 
 
-	public static void main(String[] args) {
-		var scoreSheet = new ScoreSheet();
-		var board = new Board(List.of(1, 1, 1, 1, 1));
-		scoreSheet.addCombination(new Chance(), board);
-		
-		//scoreSheet.addCombination(new SmallStraight(), board);
-		System.out.println(scoreSheet);
-		System.out.println(scoreSheet.scoreTotal());
+	public Combination parseCombination(String combinationName) {
+		Objects.requireNonNull(combinationName);
+
+		// ne pas lancer une exception mais reposer la question si default
+		for (var comb : combinations){
+
+			if (comb.code().equals(combinationName)){
+				return comb;
+			}
+		}
+
+		return null;  // null par défaut pour la gestion des erreurs 
 	}
 
 }

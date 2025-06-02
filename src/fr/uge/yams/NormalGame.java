@@ -2,8 +2,23 @@ package fr.uge.yams;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import fr.uge.yams.combinations.Chance;
+import fr.uge.yams.combinations.Combination;
+import fr.uge.yams.combinations.FourOfAKind;
+import fr.uge.yams.combinations.FullHouse;
+import fr.uge.yams.combinations.LargeStraight;
+import fr.uge.yams.combinations.SmallStraight;
+import fr.uge.yams.combinations.ThreeOfAKind;
+import fr.uge.yams.combinations.Yahtzee;
 
 public class NormalGame implements Game {
+
+
+    // on met la liste des combinaisons en const
+    private final static List<Combination> combinationsChosen = List.of(new Chance(), new ThreeOfAKind(), new FourOfAKind(), new FullHouse(), new SmallStraight(), new LargeStraight(), new Yahtzee());
+    
     private final ArrayList<User> users;
     
     public NormalGame(int numPlayer) {
@@ -16,7 +31,9 @@ public class NormalGame implements Game {
         // initialisation de tout les joueur 
         for (int i = 0; i < numPlayer; i++){
             System.out.println("Welcome, user " + (i + 1) + ", please enter your name.");
-            users.add(new Player());
+
+            // le joueur a les combinaison définit et utilise le board avec les dices 
+            users.add(new Player(combinationsChosen, new BoardDice()));
         }
     }
 
@@ -29,19 +46,18 @@ public class NormalGame implements Game {
         // initialisation de tout les joueur 
         for (int i = 0; i < numPlayer; i++){
             System.out.println("Welcome, user " + (i + 1) + ", please enter your name.");
-            users.add(new Player());
+            users.add(new Player(combinationsChosen, new BoardDice()));
         }
 
         // initialisation des IA
         for (int i = 0; i < numAI; i++){
             System.out.println("AI #" + (i + 1));
-            users.add(AI.chooseAI(i + 1));
+
+            // pour le mode de jeu NormalGame on utilise les dés
+            users.add(AI.chooseAI(i + 1, combinationsChosen, new BoardDice()));
         }
         
     }
-
-    
-
 
     @Override
     public void playRounds(){
@@ -69,7 +85,7 @@ public class NormalGame implements Game {
                 maxLen = user.lenUserName();
             }
         }
-        return "user".length() > maxLen ? "user".length() :maxLen;
+        return "user".length() > maxLen ? "user".length() : maxLen;
     }
 
     public int lenMaxScore(){
@@ -79,7 +95,7 @@ public class NormalGame implements Game {
                 maxLen = user.lenScore();
             }
         }
-        return "score".length() > maxLen ? "score".length() :maxLen;
+        return "score".length() > maxLen ? "score".length() : maxLen;
     }
 
     private String makeBr(){
