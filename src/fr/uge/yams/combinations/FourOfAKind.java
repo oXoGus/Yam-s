@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import fr.uge.yams.Board;
 
-public record FourOfAKind() implements DiceCombination {
+public record FourOfAKind() implements Combination {
 
 	// utilisation de la méthode score abstraite par défaut
 	

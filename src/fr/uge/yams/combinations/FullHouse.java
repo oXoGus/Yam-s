@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import fr.uge.yams.Board;
 
-public record FullHouse() implements DiceCombination {
+public record FullHouse() implements Combination {
 
 	@Override
 	public int score(Board board) {
@@ -32,7 +32,7 @@ public record FullHouse() implements DiceCombination {
 
 	@Override
 	//Renvoit les index dans fiveDice des dés à reroll
-	public List<Integer> dicesMissing(Board board){
+	public List<Integer> elementsMissing(Board board){
 		Objects.requireNonNull(board);
 		
 		var missing = new ArrayList<Integer>();

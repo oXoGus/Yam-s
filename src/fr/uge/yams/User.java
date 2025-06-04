@@ -1,24 +1,23 @@
 package fr.uge.yams;
 
-import java.util.Objects;
+import java.util.List;
 
-public interface User extends Comparable<User>{
+import fr.uge.yams.models.CombinationInfo;
+import fr.uge.yams.models.UserScore;
+import javafx.scene.Node;
 
-    public void playRound() ;
+public interface User {
+    UserScore score();
 
-    public String result(int playerRanking, int lenMaxPlayerRanking, int lenMaxUserName, int lenMaxScore);
+    List<CombinationInfo> scoreSheet();
 
-    public int score();
+    String username();
 
-    public int lenUserName();
+    void rerollAll();
+    
+    List<Node> boardShapes();
 
-    public int lenScore();
-
-    // pour classer les user par ordre décroissant en fonction de leurs score
-    @Override
-    default int compareTo(User o) {
-        Objects.requireNonNull(o);
-        return o.score() - score();
-    }
-
+	boolean isWithCards();
+    
 }
+

@@ -1,6 +1,16 @@
 package fr.uge.yams;
 
+import java.io.IOError;
+import java.io.IOException;
+import java.util.List;
 import java.util.Random;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Shape;
 
 public record Dice(int value) implements GameElement{
 
@@ -18,9 +28,20 @@ public record Dice(int value) implements GameElement{
 		return new Dice();
 	}
 
+	// pour afficher le dé
 	@Override
-	public String toString() {
-		return "|  " + value + "  |";
+	public Node shape() {
+		try {
+			// on récupère la liste des shapes des dés 
+			AnchorPane dices = FXMLLoader.load(getClass().getResource("/fr/uge/yams/views/dices.fxml"));
+			
+			// les dés sont de 1 a 6 
+			return dices.getChildren().get(value - 1);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

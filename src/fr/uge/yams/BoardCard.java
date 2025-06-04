@@ -8,6 +8,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javafx.scene.Node;
+
 public class BoardCard implements Board{
     private final ArrayList<Card> cards;
 
@@ -144,16 +146,60 @@ public class BoardCard implements Board{
 		// on oublie pas la dernière seq
 		allSeq.add(seq);
 
+		// cas spécifique, l'As peut aller a la fin après le roi
+		// on ajoute l'As si dans chaque séquence
+		// si on a un as dans la main de départ
+		if (occurence().contains(1)){
+			addAceSpecificCase(allSeq);
+		}
+
 		// on renvoie la seq la plus grande
 		return maxSizeLst(allSeq);
     }
+
+	private void addAceSpecificCase(ArrayList<Set<Integer>> allSeq){
+		
+		// 10 J Q K
+		var validSeq = new HashSet<Integer>(List.of(10, 11, 12, 13));
+		
+		// pour chaque seq 
+		for (var seq : allSeq){
+
+			if (seq.size() == 4){
+				
+				// on retrouve les rank a partir de leur positions
+				var nSeq = new HashSet<Integer>();
+
+				// on reconstruit la seq avec les valeurs
+				for (var pos : seq){
+					nSeq.add(cards.get(pos - 1).rank());
+				}
+
+				// si la seq est 10 J Q K 
+				if (nSeq.equals(validSeq)){
+
+					int acePos = 0;
+					// on trouve la pos de l'as 
+					for (int i = 0; i < cards.size(); i++){
+						if (cards.get(i).rank() == 1){
+							acePos = i + 1;	
+						}
+					}
+
+					// on ajoute l'as
+					seq.add(acePos);
+					return;
+				}
+			}
+		}
+	}
 
     @Override
     public TreeMap<Integer, Integer> uniqueValAndGameElementIndexSorted(){
 		var res = new TreeMap<Integer, Integer>();
 		
 		for (int i = 0; i < 5; i++){
-			var cardVal = cards.get(i).value();
+			var cardVal = cards.get(i).rank();
 			
 			// on ajoute uniquement les premier index pour une valeur
 			if (!res.containsKey(cardVal)){
@@ -199,7 +245,18 @@ public class BoardCard implements Board{
 		}
 		return true;
 	}
-    
+
+	@Override
+	public List<Node> allGameElementShapes(){
+		var res = new ArrayList<Node>();
+		for (var card : cards){
+			res.add(card.shape());
+		}
+		return List.copyOf(res);
+	}
+
+
+
 
     public static void main(String[] args) {
 
@@ -208,4 +265,5 @@ public class BoardCard implements Board{
 		System.out.println(board);
 		System.out.println(board.elementsFormingSeq());
 	}
+
 }

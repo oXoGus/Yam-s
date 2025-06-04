@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import fr.uge.yams.Board;
 
-public record Chance() implements DiceCombination{
+public record Chance() implements Combination{
 
 	// utilisation de la méthode score abstraite par défaut
 
@@ -30,7 +30,7 @@ public record Chance() implements DiceCombination{
 	}
 
 	@Override
-	public List<Integer> dicesMissing(Board board) {
+	public List<Integer> elementsMissing(Board board) {
 		Objects.requireNonNull(board);
 		return List.copyOf(new ArrayList<Integer>()); // la combi est tjr valide
 	}

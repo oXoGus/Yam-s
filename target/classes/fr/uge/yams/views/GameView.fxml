@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="mainContainer" xmlns:fx="http://javafx.com/fxml" fx:controller="fr.uge.yams.controllers.GameController" style="-fx-background-color: #4C4540;" prefWidth="1000" prefHeight="600">
+
+    <!-- Partie droite : Tableau de score -->
+    <right>
+        <VBox spacing="10" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+            <VBox.margin>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </VBox.margin>
+            <Label text="🔴" style="-fx-font-size: 24;" />
+            <Label text="Table of score" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="scoreTable" prefHeight="400">
+                <columns>
+                    <TableColumn fx:id="playerColumn" text="player"/>
+                    <TableColumn fx:id="scoreColumn" text="score"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </right>
+</BorderPane>

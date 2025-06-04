@@ -12,7 +12,7 @@ public class StraightFlush implements Combination {
     @Override
 	public int score(Board board) {
 		Objects.requireNonNull(board);
-		return 40;
+		return 40 + board.sum();
 	}
 
     @Override
@@ -48,7 +48,7 @@ public class StraightFlush implements Combination {
 	}
 
 	@Override
-	public List<Integer> dicesMissing(Board board) {
+	public List<Integer> elementsMissing(Board board) {
 		Objects.requireNonNull(board);
 
 		var dicesKept = board.elementsFormingSeq();

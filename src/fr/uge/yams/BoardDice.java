@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javafx.scene.Node;
+
 public class BoardDice implements Board{
     private final ArrayList<Dice> fiveDice;
 
@@ -192,6 +194,15 @@ public class BoardDice implements Board{
     @Override
     public int maxOcc(){
 		return Collections.max(occurence());
+	}
+
+	@Override
+	public List<Node> allGameElementShapes(){
+		var res = new ArrayList<Node>();
+		for (var dice : fiveDice){
+			res.add(dice.shape());
+		}
+		return List.copyOf(res);
 	}
 
     public static void main(String[] args) {

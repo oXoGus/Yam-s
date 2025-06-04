@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.CheckBox?>
+
+
+
+<BorderPane id="root" maxHeight="600.0" maxWidth="600.0" minHeight="500" minWidth="500" 
+prefHeight="467.0" prefWidth="523.0" styleClass="root" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.ButtonController">
+   <center>
+      <TextArea fx:id="textArea" disable="true" BorderPane.alignment="CENTER"/>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Button id="insert" fx:id="Insert" text="Insert" onAction="#handleButtonInsert"/>
+            <Button id="Delete" fx:id="Delete" text="Delete"  onAction="#handleButtonDelete"/>
+            <Button id="Quit" fx:id="Quit" text="Quit" onAction="#handleButtonQuit"/>
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="20.0" />
+         </BorderPane.margin>
+      </HBox>
+   </bottom>
+   <top>
+      <Label id="Title" fx:id="Title" text="Ajouter et effacer" alignment="CENTER" textAlignment="CENTER" BorderPane.alignment="CENTER"/>
+   </top>
+   <left>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <CheckBox fx:id="checkBox"/>
+            <Label fx:id="Option" text="Option" alignment="CENTER" textAlignment="CENTER"/>
+         </children>
+      </HBox>
+   </left>
+   
+</BorderPane>

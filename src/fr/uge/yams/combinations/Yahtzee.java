@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import fr.uge.yams.Board;
 
-public record Yahtzee() implements DiceCombination {
+public record Yahtzee() implements Combination {
 
 	@Override
 	public int score(Board board) {

@@ -8,6 +8,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javafx.scene.Node;
+
 public interface Board {
     void rerollAll();
     
@@ -48,4 +50,7 @@ public interface Board {
 	default boolean isBoardCard(){
 		return false;
 	}
+
+	List<Node> allGameElementShapes();
+
 }
