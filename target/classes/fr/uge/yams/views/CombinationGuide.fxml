@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox fx:id="mainContainer" alignment="TOP_CENTER" stylesheets="@application.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.uge.yams.controllers.ScoreSheetGuideController">
+   <children>
+      <Label fx:id="titleLabel" alignment="CENTER" prefHeight="55.0" prefWidth="886.0" style="-fx-font-weight: bold; -fx-font-size: 30; -fx-text-fill: #ede6d6;" text="'s Score Sheet">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Label>
+      <TableView fx:id="comboTable" VBox.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="comboColumn" text="Combinations" />
+            <TableColumn fx:id="statusColumn" text="State" />
+            <TableColumn fx:id="howToObtainColumn" text="How to obtain" />
+            <TableColumn fx:id="scoreColumn" text="Score" />
+         </columns>
+         <VBox.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="10.0" />
+         </VBox.margin>
+      </TableView>
+   </children>
+</VBox>

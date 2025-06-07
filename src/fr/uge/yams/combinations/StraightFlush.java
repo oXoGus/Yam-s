@@ -82,4 +82,9 @@ public class StraightFlush implements Combination {
 		// donc factoriel de numDicesMissing/6
 		return Games.fact(numDicesMissing)/6.0;
 	}
+
+	@Override
+	public String howToObtain() {
+		return "Any combination of dices";
+	}
 }

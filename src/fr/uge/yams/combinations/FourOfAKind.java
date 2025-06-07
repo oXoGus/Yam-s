@@ -34,6 +34,13 @@ public record FourOfAKind() implements Combination {
 		return "Four of a kind";
 	}
 
+	@Override
+	public String howToObtain() {
+		return "At least four dice the same";
+	}
 	
-
+	@Override
+	public String scoreInfo(Board board){
+		return "Sum of all dices";
+	}
 }

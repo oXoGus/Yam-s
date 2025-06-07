@@ -1,37 +1,76 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
-
 .root {
-    -fx-background-color: derive(darkturquoise,60%);
-    -fx-font: 16px "Tahoma";
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-style: dotted;
+    -fx-font-family: "Georgia";
+    -fx-font-weight: bold;
+    -fx-background-color: #4C4540;
+    -fx-text-fill: #ede6d6;
 }
 
 .button {
-	-fx-background-color: blue;
-    -fx-text-fill: white;
-    -fx-background-radius: 10 0 0 5;
+    -fx-font-family: "Georgia";
+    -fx-font-weight: bold;
+    -fx-text-fill: #4C4540;
+    -fx-background-color: #ede6d6;
+    -fx-font-size: 18;
 }
 
-#Insert {
-    -fx-background-color: green;
-    -fx-text-fill: white;
+.label {
+    -fx-font-family: "Georgia";
+    -fx-font-weight: bold;
 }
 
-#Quit {
-    -fx-background-color: red;
-    -fx-text-fill: white;
+
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #ede6d6;
+    -fx-border-radius: 12 12 0 0;
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 0;
 }
 
-.check-box{ 
-    -fx-border-color: black;
+.table-view .column-header-background {
+    -fx-background-color: #ede6d6;
+    -fx-border-radius: 12 12 0 0;
+    -fx-background-radius: 12 12 0 0;
 }
 
-#Title {
-    -fx-background-color: red;
-    -fx-text-fill: white;
-    -fx-font: italic bolder 20px "serif";
+.table-view .column-header {
+    -fx-background-color: transparent;
 }
+
+.table-view .column-header .label {
+    -fx-text-fill: #4C4540;
+    -fx-font-size: 15;
+
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #4C4540;
+    -fx-border-color: #ede6d6;
+}
+
+.table-view .table-cell{
+    -fx-background-color: #4C4540;
+    -fx-border-color: #ede6d6;
+    -fx-border-width: 1.5px;
+}
+
+.table-cell {
+    -fx-text-fill: #ede6d6;
+    -fx-font-size: 15;
+    -fx-font-family: "Georgia";
+}
+
+.table-row-cell:empty {
+    -fx-background-color: #ede6d6;
+}
+
+.table-view .placeholder {
+    -fx-background-color: #ede6d6;
+}
+
+
+
 
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */

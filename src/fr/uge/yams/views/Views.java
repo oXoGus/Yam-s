@@ -10,14 +10,18 @@ public class Views {
 		
 		// on met la valeur par défaut
 		TextInputDialog dialog = new TextInputDialog(defaultUsername);
+		dialog.setTitle("choose your name");
         dialog.setHeaderText("Welcome " + defaultUsername + ", enter your username");
 
 		Optional<String> res;
 
 		// tant que le joueur n'a pas valider sont pseudo
-		do {
-			res = dialog.showAndWait();
-		} while (!res.isPresent());
+		res = dialog.showAndWait();
+		
+		// si l'utilisateur a appuyé sur cancel
+		if (res.isEmpty()){
+			return null;
+		}
 		
 		return res.get();
 	}

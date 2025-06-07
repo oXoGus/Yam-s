@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import fr.uge.yams.models.Game;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,8 +34,17 @@ public class MenuController {
     @FXML
     private Button customButton;
 
+    @FXML
+    private Button quitBtn;
+
     public void startSoloGame(ActionEvent e) {
         actualGame = new Game(1);
+
+        // on annule la séléction de partie 
+        if (actualGame.isCanceled()){
+            actualGame = null;
+            return;
+        }
         
         try {
         	loadInterface(e);
@@ -54,6 +64,13 @@ public class MenuController {
             return;
         }
         actualGame = new Game(numPlayer);
+
+        // on annule la séléction de partie 
+        if (actualGame.isCanceled()){
+            actualGame = null;
+            return;
+        }
+
         try {
         	loadInterface(e);
         } catch (IOException ev) {
@@ -62,6 +79,13 @@ public class MenuController {
     }
     public void startDuelIAGame(ActionEvent e) {
         actualGame = new Game(1, 1);
+
+        // on annule la séléction de partie 
+        if (actualGame.isCanceled()){
+            actualGame = null;
+            return;
+        }
+
         try {
         	loadInterface(e);
         } catch (IOException ev) {
@@ -85,6 +109,12 @@ public class MenuController {
         
         actualGame = new Game(numPlayer, numAI);
 
+        // on annule la séléction de partie 
+        if (actualGame.isCanceled()){
+            actualGame = null;
+            return;
+        }
+
         try {
         	loadInterface(e);
         } catch (IOException ev) {
@@ -95,7 +125,7 @@ public class MenuController {
     //Va demander au joueur le nombre de joueurs dans une partie custom ou multiplayer
     private int askPlayers() {
         //La valeur par défault est 1
-        TextInputDialog dialog = new TextInputDialog("1");
+        TextInputDialog dialog = new TextInputDialog("2");
         dialog.setHeaderText("Entrez le nombre de joueurs");
 
         Optional<String> result;
@@ -169,16 +199,21 @@ public class MenuController {
         duelButton.setOnAction(e -> startMultiplePlayersGame(e));
         duelIAButton.setOnAction(e -> startDuelIAGame(e));
         customButton.setOnAction(e -> startCustomGame(e));
+        quitBtn.setOnAction(e -> quitGame());
+    }
+
+    public void quitGame(){
+
+        // on utilise Platform pour fermer toutes les fenêtre y compris les scoreSheet des utilisateurs
+        Platform.exit();
     }
 
     public void backToTheMenu(){
-        
-        // on remet tout de
         try {
 			BorderPane root = FXMLLoader.load(getClass().getResource("/fr/uge/yams/views/menu.fxml"));
 			
 			Scene scene = new Scene(root);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource("/fr/uge/yams/views/application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Yams");
 			primaryStage.show();

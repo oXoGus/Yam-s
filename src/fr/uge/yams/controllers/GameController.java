@@ -2,6 +2,7 @@ package fr.uge.yams.controllers;
 
 import javafx.animation.PauseTransition;
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 import fr.uge.yams.User;
+import fr.uge.yams.models.CombinationInfo;
 import fr.uge.yams.models.Game;
 import fr.uge.yams.models.UserScore;
 
@@ -35,6 +37,16 @@ public class GameController {
     // le border pane principale
     @FXML
     private BorderPane mainContainer;
+    @FXML
+    private VBox vBoxContainer;
+    @FXML
+    private TableView<UserScore> scoreTable;
+    @FXML
+    private TableColumn<UserScore, String> playerColumn;
+    @FXML
+    private TableColumn<UserScore, Integer> playerScoreColumn;
+    @FXML
+    private TableColumn<UserScore, Integer> playerRankColumn;
 
     // on inject la game depuis le controlleur du menu
     public void setGame(Game game){
@@ -44,6 +56,10 @@ public class GameController {
 
         // et on commence la partie
         startTurn();
+    }
+
+    public void backToTheMenu(){
+        menuController.backToTheMenu();
     }
 
     // pour donner les info du scoreboard au controlleur de user car la scoreboard est sur la vue de l'user
@@ -56,6 +72,14 @@ public class GameController {
         var data = FXCollections.observableArrayList(scoreBoardData);
 
         return data;
+    }
+
+    public int numRound(){
+        return game.numRound();
+    }
+
+    public int maxRound(){
+        return game.maxRound();
     }
 
     public void startTurn(){
@@ -75,12 +99,12 @@ public class GameController {
 
         // on affiche au centre les info du tour
         Label usernameLabel = new Label(user.username() + "'s turn");
-        usernameLabel.setTextFill(Paint.valueOf("#ffffff")); 
-        usernameLabel.setFont(new Font(50));
+        usernameLabel.setTextFill(Paint.valueOf("#ede6d6")); 
+        usernameLabel.setFont(new Font("Georgia", 50));
 
         Label numRoundLabel = new Label("Round #" + numRound + "/" + game.maxRound());
-        numRoundLabel.setTextFill(Paint.valueOf("#ffffff")); 
-        numRoundLabel.setFont(new Font(35));
+        numRoundLabel.setTextFill(Paint.valueOf("#ede6d6")); 
+        numRoundLabel.setFont(new Font("Georgia", 35));
 
         VBox vBox = new VBox(numRoundLabel, usernameLabel);
         vBox.setAlignment(Pos.CENTER);
@@ -88,7 +112,7 @@ public class GameController {
         mainContainer.setCenter(vBox);
 
         // création de la transtion
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
         pause.setOnFinished(event -> {
             startUserTurn(user);
         });
@@ -108,9 +132,9 @@ public class GameController {
 
             // on récupère le controlleur et on inject le model de l'user
             UserController userController = loader.getController();
-            userController.setUser(user);
             userController.setGameController(this);
-
+            userController.setUser(user);
+            
             // on affiche la vue de l'utilisateur 
             mainContainer.setCenter(userView);
 
@@ -139,6 +163,39 @@ public class GameController {
         Objects.requireNonNull(menuController);
 
         this.menuController = menuController;
+    }
+
+
+    public void endScreen(){
+        
+        // on remet le tableau des scores
+        mainContainer.setCenter(vBoxContainer);
+
+        // on remplis le tableau 
+        scoreTable.setItems(scoreBoardData());
+
+        // on définit la taille du tableau en fonction du nombre délémént dedans pour ne pas afficher de lignes vides
+        scoreTable.setFixedCellSize(25);
+
+        // on multiplie la taille d'une row par le nombre de row
+        scoreTable.prefHeightProperty().bind(Bindings.size(scoreTable.getItems()).multiply(scoreTable.getFixedCellSize()).add(28));    
+    }
+
+    @FXML 
+    private void initialize(){
+        
+        // on initialise le tableau des score
+        playerRankColumn.setCellValueFactory(new PropertyValueFactory<>("rank"));
+        playerColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        playerScoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        
+        // la dernière colonne prend le reste de l'espace dispo
+        scoreTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        
+
+        // puis on le retire pour laisser place a la vue de l'user
+        mainContainer.setCenter(null);
+
     }
 
 

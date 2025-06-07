@@ -78,4 +78,9 @@ public record LargeStraightCard() implements Combination {
 		return "Large Straight";
 	}
 
+	@Override
+	public String howToObtain() {
+		return "Any combination of dices";
+	}
+
 }

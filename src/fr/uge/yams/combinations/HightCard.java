@@ -43,4 +43,16 @@ public record HightCard() implements Combination {
 	public String toString(){
 		return "Three of a kind";
 	}
+
+	@Override
+	public String howToObtain() {
+		return "At least three dice the sam";
+	}
+	
+	@Override
+	public String scoreInfo(Board board){
+		return "Sum of all dices";
+	}
+
+	
 }

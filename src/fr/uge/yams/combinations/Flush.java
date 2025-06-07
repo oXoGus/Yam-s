@@ -64,6 +64,11 @@ public record Flush() implements Combination {
 
 	@Override
 	public String toString(){
-		return "Full House";
+		return "Flush";
+	}
+
+	@Override
+	public String howToObtain() {
+		return "Any combination of dices";
 	}
 }

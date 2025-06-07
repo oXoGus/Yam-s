@@ -35,19 +35,19 @@ public record Chance() implements Combination{
 		return List.copyOf(new ArrayList<Integer>()); // la combi est tjr valide
 	}
 
-	
-	public String toString(String state, String score) {
-		Objects.requireNonNull(state);
-		Objects.requireNonNull(score);
-		
-		// on utilise l'état pour faire un affichage dynamique
-		return "| C    | " + state + "| Chance          | Any combination                        | " + score + " |\n";
-	}
-
 	@Override
 	public String toString(){
 		return "Chance";
 	}
+
+	@Override
+	public String howToObtain() {
+		return "Any combination of dices";
+	}
 	
+	@Override
+	public String scoreInfo(Board board){
+		return "Sum of all dices";
+	}
 
 }

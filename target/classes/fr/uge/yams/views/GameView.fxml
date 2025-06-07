@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="mainContainer" prefHeight="600" prefWidth="1000" style="-fx-background-color: #4C4540;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="fr.uge.yams.controllers.GameController">
+
+<BorderPane fx:id="mainContainer" prefHeight="600" prefWidth="1000" style="-fx-background-color: #4C4540;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.uge.yams.controllers.GameController" >
+    <center>
+        <VBox fx:id="vBoxContainer" alignment="CENTER" prefHeight="872.0" prefWidth="450.0" spacing="10.0" HBox.hgrow="NEVER">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-weight: bold; -fx-font-size: 26;" text="Game Result" textFill="#ede6d6" />
+                  <TableView fx:id="scoreTable" prefHeight="144.0" prefWidth="444.0" style="-fx-background-color: #ede6d6;" stylesheets="@application.css">
+                    <columns>
+                        <TableColumn fx:id="playerRankColumn" prefWidth="50.0" styleClass="colHeader" text="Rank" />
+                      <TableColumn fx:id="playerColumn" prefWidth="115.0" resizable="false" text="Player" />
+                      <TableColumn fx:id="playerScoreColumn" prefWidth="65.0" style="-fx-text-fill: #ede6d6;" text="Score" />
+                    </columns>
+                  </TableView>
+               </children>
+            </VBox>
+    </center>
 </BorderPane>

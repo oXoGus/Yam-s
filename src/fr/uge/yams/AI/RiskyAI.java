@@ -112,12 +112,12 @@ public class RiskyAI implements AI{
 
     @Override
     public List<CombinationInfo> scoreSheet(){
-        return scoreSheet.combinaitionsInfo();
+        return scoreSheet.combinaitionsInfo(board);
     }
 
     @Override
     public UserScore score(){
-		return new UserScore(username, scoreSheet.scoreTotal());
+        return new UserScore(username, scoreSheet.scoreTotal());
 	}
 
     @Override

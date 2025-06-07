@@ -82,16 +82,14 @@ public record SmallStraight() implements Combination {
 	}
 
 	
-	public String toString(String state, String score) {
-		Objects.requireNonNull(state);
-		Objects.requireNonNull(score);
-		
-		// on utilise l'état pour faire un affichage dynamique
-		return "| S    | "+ state + "| Small Straight  | Four sequential dice                   | 30              |\n";
-	}
 
 	@Override
 	public String toString(){
 		return "Small Straight";
+	}
+
+	@Override
+	public String howToObtain() {
+		return "Four sequential dice";
 	}
 }

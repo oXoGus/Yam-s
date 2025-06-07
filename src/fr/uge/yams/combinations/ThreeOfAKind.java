@@ -33,4 +33,14 @@ public record ThreeOfAKind() implements Combination {
 		return "Three of a kind";
 	}
 
+	@Override
+	public String howToObtain() {
+		return " At least three dice the same";
+	}
+
+	@Override
+	public String scoreInfo(Board board){
+		return "Sum of all dices";
+	}
+
 }

@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javafx.scene.Node;
-import javafx.scene.shape.Shape;
 
 public class BoardDice implements Board{
     private final ArrayList<Dice> fiveDice;

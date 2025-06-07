@@ -89,4 +89,9 @@ public record LargeStraight() implements Combination {
 		return "Large Straight";
 	}
 
+	@Override
+	public String howToObtain() {
+		return "Five sequential dice";
+	}
+
 }

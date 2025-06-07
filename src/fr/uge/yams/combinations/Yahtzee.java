@@ -36,4 +36,9 @@ public record Yahtzee() implements Combination {
 		return "Yahtzee";
 	}
 
+	@Override
+	public String howToObtain() {
+		return "All five dice the same";
+	}
+
 }

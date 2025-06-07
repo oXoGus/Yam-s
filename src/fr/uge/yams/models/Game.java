@@ -31,6 +31,8 @@ public class Game {
     // même chose avec le n° du round 
     private int numRound = 1;
 
+    private String gameStatus;
+
     
     public Game(int numPlayer) {
 
@@ -44,7 +46,15 @@ public class Game {
             // on instancie le model 
 
             // on demande au joueur son username avec son username par défaut
-		    String username = Views.askUsername("Player " + numPlayer);
+		    String username = Views.askUsername("Player " + (i + 1));
+
+            // si l'utilisateur a annulé 
+            if (username == null){
+                gameStatus = "Canceled";
+                return;
+            } else {
+                gameStatus = "OK";
+            }
 
             // le joueur a les combinaison définit et utilise le board avec les dices 
             users.add(new Player(username, combinationsChosen, new BoardDice()));
@@ -61,7 +71,15 @@ public class Game {
         for (int i = 0; i < numPlayer; i++){
 
             // on demande au joueur son username avec son username par défaut
-		    String username = Views.askUsername("Player " + numPlayer);
+		    String username = Views.askUsername("Player " + (i + 1));
+
+            // si l'utilisateur a annulé 
+            if (username == null){
+                gameStatus = "canceled";
+                return;
+            } else {
+                gameStatus = "OK";
+            }
 
             users.add(new Player(username, combinationsChosen, new BoardDice()));
         }
@@ -73,6 +91,10 @@ public class Game {
             users.add(AI.chooseAI(i + 1, combinationsChosen, new BoardDice()));
         }
         
+    }
+
+    public boolean isCanceled(){
+        return gameStatus.equals("Canceled");
     }
 
     public User userTurn(){
@@ -126,6 +148,14 @@ public class Game {
 
         // puis on la trie pour faire le classement
         Collections.sort(res);
+
+        // on ajoute ensuite les rank de chacun 
+        int rank = 1;
+        for (var user : res){
+            user.setRank(rank);
+            rank++;
+        }
+
         return res;
     }
 }

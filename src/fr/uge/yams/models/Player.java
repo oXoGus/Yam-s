@@ -146,7 +146,7 @@ public class Player implements User {
 	// pour que la vue puisse afficher la scoreSheet 
 	@Override
 	public List<CombinationInfo> scoreSheet(){
-		return scoreSheet.combinaitionsInfo();
+		return scoreSheet.combinaitionsInfo(board);
 	}
 	
 	@Override
@@ -210,7 +210,7 @@ public class Player implements User {
 		}
 
 		if (!combination.isValid(board)){
-			return "this combination is note valid with this board";
+			return "this combination is not valid with this board";
 		}
 
 		// sinon on ajoute la combi

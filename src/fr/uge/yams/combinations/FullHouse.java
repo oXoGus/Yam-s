@@ -68,4 +68,9 @@ public record FullHouse() implements Combination {
 	public String toString(){
 		return "Full House";
 	}
+
+	@Override
+	public String howToObtain() {
+		return "Three of one number and two of another";
+	}
 }

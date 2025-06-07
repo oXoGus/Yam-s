@@ -7,27 +7,31 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="400" prefWidth="600" style="-fx-background-color: #4B453C;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21.0.0" fx:controller="fr.uge.yams.controllers.MenuController">
+<BorderPane fx:id="mainContainer" prefHeight="400" prefWidth="600" style="-fx-background-color: #4B453C;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.uge.yams.controllers.MenuController">
 
     <!-- CENTRE : Titre + Boutons -->
     <center>
-        <VBox alignment="CENTER" spacing="20">
+        <VBox alignment="CENTER" spacing="20" stylesheets="@application.css">
             <padding>
                 <Insets bottom="50" left="50" right="50" top="50" />
             </padding>
 
             <!-- Titre -->
-            <Label text="Yahms" textFill="#EDE6D6">
+            <Label style="-fx-font-size: 50;" text="Yam's" textFill="#EDE6D6">
                 <font>
                     <Font name="Georgia Bold" size="36" />
                 </font>
             </Label>
 
             <!-- Boutons de menu -->
-            <Button fx:id="soloButton" prefWidth="200" style="-fx-background-color: #ADD8E6; -fx-font-size: 14px;" text="Partie Solo" />
-            <Button fx:id="duelButton" prefWidth="200" style="-fx-background-color: #ADD8E6; -fx-font-size: 14px;" text="Duel" />
-            <Button fx:id="duelIAButton" prefWidth="200" style="-fx-background-color: #ADD8E6; -fx-font-size: 14px;" text="Duel contre IA" />
-            <Button fx:id="customButton" prefWidth="200" style="-fx-background-color: #ADD8E6; -fx-font-size: 14px;" text="Partie Customisée" />
+            <Button fx:id="soloButton" prefWidth="200" text="Solo">
+            <font>
+               <Font name="Georgia Bold" size="13.0" />
+            </font></Button>
+            <Button fx:id="duelButton" prefWidth="200" text="Multiplayer" />
+            <Button fx:id="duelIAButton" prefWidth="200" text="against an AI" />
+            <Button fx:id="customButton" prefWidth="200" text="custom" />
+         <Button fx:id="quitBtn" prefWidth="200" style="-fx-background-color: #e6adad;" text="quit" />
         </VBox>
     </center>
 </BorderPane>

@@ -81,7 +81,7 @@ public class RandomAI implements AI{
     
     @Override
     public List<CombinationInfo> scoreSheet(){
-        return scoreSheet.combinaitionsInfo();
+        return scoreSheet.combinaitionsInfo(board);
     }
 
     @Override

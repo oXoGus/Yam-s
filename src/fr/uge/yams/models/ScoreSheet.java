@@ -1,5 +1,6 @@
 package fr.uge.yams.models;
 
+import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,23 +69,25 @@ public class ScoreSheet {
 
 
 	// pour rendre l'affichage plus simple par la vue
-	public List<CombinationInfo> combinaitionsInfo(){
+	public List<CombinationInfo> combinaitionsInfo(Board board){
+		Objects.requireNonNull(board);
 		var res = new ArrayList<CombinationInfo>();
 
 		// pour chaque combi 
 		for (var comb : combinations){
-			res.add(toCombinaitionInfo(comb));
+			res.add(toCombinaitionInfo(comb, board));
 		}
 
 		return List.copyOf(res);
 	}
 
-	public CombinationInfo toCombinaitionInfo(Combination comb){
+	public CombinationInfo toCombinaitionInfo(Combination comb, Board board){
 		Objects.requireNonNull(comb);
+		Objects.requireNonNull(board);
 		
 		// dans quel état se trouve la combi
 		String state = isCombinaisonFree(comb) ? "not chosen yet" : (isValidate(comb) ? "validated" : "sacrified"); 
-		return new CombinationInfo(comb, state, validateDiceCombinations.getOrDefault(comb, 0));
+		return new CombinationInfo(comb, state, comb.howToObtain(), validateDiceCombinations.getOrDefault(comb, 0), comb.scoreInfo(board));
 	}
 
 	public void sacrifyCombination(Combination pattern, Board board){
@@ -208,5 +211,4 @@ public class ScoreSheet {
 
 		return null;  // null par défaut pour la gestion des erreurs 
 	}
-
 }

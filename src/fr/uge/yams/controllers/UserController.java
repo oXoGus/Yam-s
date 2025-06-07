@@ -1,10 +1,12 @@
 package fr.uge.yams.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
@@ -13,19 +15,27 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.beans.Observable;
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
+import java.util.Stack;
 
 import fr.uge.yams.Board;
 import fr.uge.yams.GameElement;
@@ -45,7 +55,6 @@ public class UserController {
     // liste contenant tout les éléments de jeu qui sont séléctionné pour le réroll
     private ArrayList<Integer> gameElementsSelectedToReroll;
 
-    // Partie gauche - Tableau de combinaisons
     @FXML
     private TableView<CombinationInfo> comboTable;
     @FXML
@@ -62,9 +71,9 @@ public class UserController {
     private TableColumn<UserScore, String> playerColumn;
     @FXML
     private TableColumn<UserScore, Integer> playerScoreColumn;
+    @FXML
+    private TableColumn<UserScore, Integer> playerRankColumn;
 
-
-    // Partie centre - Dés
     @FXML
     private AnchorPane gameElementContainer;
 
@@ -88,6 +97,12 @@ public class UserController {
     @FXML
     private Button menuBtn;
 
+    @FXML
+    private Button openCombinationGuideBtn;
+
+    @FXML
+    private Label roundLabel;
+
     private int rerollsLeft = 3;
 
 
@@ -100,7 +115,6 @@ public class UserController {
         // on remplis le tableau des scoreSheet
         updateScoreSheet();
 
-        // on met les boutons pour selectionner les différentes combinaisons 
         
 
         // on affiche le nom de l'user
@@ -109,6 +123,7 @@ public class UserController {
         // tant que l'user n'a pas lancer ces dés on cache le nombre de relance restantes
         rerollLabel.setVisible(false);
 
+        // on met les boutons pour selectionner les différentes combinaisons 
         setBtnCombinations();
     }
 
@@ -116,6 +131,12 @@ public class UserController {
         Objects.requireNonNull(gameController);
         
         this.gameController = gameController;
+
+        // on charge les info du tableau des scores
+        updateScoreBoard();
+
+        // on affiche le n° du round
+        roundLabel.setText("Round #" + gameController.numRound() + "/" + gameController.maxRound());
     }
 
     public void setBtnCombinations(){
@@ -171,7 +192,7 @@ public class UserController {
             // on affiche ce message sous forme d'alerte
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("bad combination");
-            alert.setContentText(message);
+            alert.setHeaderText(message);
             
             alert.showAndWait();
         } else {
@@ -213,6 +234,12 @@ public class UserController {
         
         // on ajoutes les lignes 
         comboTable.setItems(data);
+
+        // on définit la taille du tableau en fonction du nombre délémént dedans pour ne pas afficher de lignes vides
+        comboTable.setFixedCellSize(25);
+
+        // on multiplie la taille d'une row par le nombre de row
+        comboTable.prefHeightProperty().bind(Bindings.size(comboTable.getItems()).multiply(comboTable.getFixedCellSize()).add(28));
     }
 
 
@@ -421,6 +448,9 @@ public class UserController {
     @FXML
     private void initialize() {
 
+        // la dernière colonne prend le reste de l'espace dispo
+        comboTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+
         // Initialisation des colonnes des tableaux
         comboColumn.setCellValueFactory(new PropertyValueFactory<>("combination"));
 
@@ -431,19 +461,50 @@ public class UserController {
         gameElementsSelectedToReroll = new ArrayList<>();
 
         // on initialise le tableau des score
+        playerRankColumn.setCellValueFactory(new PropertyValueFactory<>("rank"));
         playerColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
-        scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        playerScoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        
+        // la dernière colonne prend le reste de l'espace dispo
+        scoreTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+
+        // pour revenir au menu
+        menuBtn.setOnAction(event -> backToTheMenu(event));
+
+
     }
 
     public void updateScoreBoard(){
         // récup les data du scoreboard
         scoreTable.setItems(gameController.scoreBoardData());
-    }
 
+
+        // on définit la taille du tableau en fonction du nombre délémént dedans pour ne pas afficher de lignes vides
+        scoreTable.setFixedCellSize(25);
+
+        // on multiplie la taille d'une row par le nombre de row
+        scoreTable.prefHeightProperty().bind(Bindings.size(scoreTable.getItems()).multiply(scoreTable.getFixedCellSize()).add(28));    
+        
+        
+    }
 
     @FXML
     private void backToTheMenu(ActionEvent event){
-        
+
+        // on demande à l'user une confirmation pour revenir au menu et donc quitter la partie
+        Alert confirmation = new Alert(AlertType.CONFIRMATION);
+        confirmation.setTitle("Return to Menu");
+        confirmation.setContentText("Are you sure you want to quit the game ?");
+
+        // on montre l'alert et on attend le retour de l'utilisateur 
+        Optional<ButtonType> res = confirmation.showAndWait();
+
+        // si l'utilisateur a bien confirmer vouloir revenir au menu
+        if (res.isPresent() && res.get() == ButtonType.OK){
+            
+            // on retourn au menu
+            gameController.backToTheMenu();
+        }
     }
     
     @FXML
@@ -463,7 +524,9 @@ public class UserController {
 
             // et on affiche le nombre de reroll restantes
             rerollLabel.setVisible(true);
-            rerollLabel.setText(rerollsLeft + "/2 reroll left");
+
+            // on ajoute un indication pour sélectionner les dés si il n'y en a 
+            rerollLabel.setText(rerollsLeft + "/2 reroll left" + (gameController.numRound() == 1 ? ", click on the dices that you want to reroll" : "" ));
 
             // on désactive par défaut le bouton reroll comme rien n'est selectionné$
             rollButton.setDisable(true);
@@ -487,6 +550,9 @@ public class UserController {
             } else {
                 rerollLabel.setText(rerollsLeft + "/2 reroll left");
             }
+
+            // on désactive par défaut le bouton reroll comme rien n'est selectionné$
+            rollButton.setDisable(true);
         } 
         // gestion du message d'indication pour les combinations
         if (user.isCombinationPossible()){
@@ -505,5 +571,35 @@ public class UserController {
             // on les actives pour le sacrifice
             activateAllCombinationBtn();
         }
+    }
+
+    public void openCombinationGuide(){
+        // ouvre une nouvelle fenêtre contenant le tableau des différentes combinaisons
+        
+        try {
+            Stage popupGuide = new Stage();
+
+            // pour que cette fenêtre ne bloque pas la principale 
+            // et qu'elle soit indépendante
+            popupGuide.initModality(Modality.NONE); 
+
+            popupGuide.setTitle("Combination Guide");
+
+            //On charge l'interface du jeu
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fr/uge/yams/views/CombinationGuide.fxml"));
+            Parent root = loader.load();
+
+            ScoreSheetGuideController scoreSheetGuideController = loader.getController();
+            
+            // on lui donne l'user pour récup les état des diffférentes combi
+            scoreSheetGuideController.setUser(user);
+
+            popupGuide.setScene(new Scene(root));
+            popupGuide.show();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        
+        
     }
 }

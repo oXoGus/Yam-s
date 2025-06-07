@@ -73,4 +73,11 @@ public interface Combination {
 	}
 
 	String code();
+
+	String howToObtain();
+
+	// pour pouvoir afficher les scores qui dépendent du board
+	default String scoreInfo(Board board){
+		return String.valueOf(score(board));
+	}
 }

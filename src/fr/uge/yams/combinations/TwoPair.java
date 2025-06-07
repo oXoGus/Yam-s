@@ -38,4 +38,9 @@ public record TwoPair() implements Combination {
 	public String toString(){
 		return "Three of a kind";
 	}
+
+	@Override
+	public String howToObtain() {
+		return "Any combination of dices";
+	}
 }
