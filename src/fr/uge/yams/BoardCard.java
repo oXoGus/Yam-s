@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javafx.scene.Node;
+import javafx.scene.shape.Shape;
 
 public class BoardCard implements Board{
     private final ArrayList<Card> cards;
@@ -255,6 +256,21 @@ public class BoardCard implements Board{
 		return List.copyOf(res);
 	}
 
+	@Override
+	public List<Node> gameElementShapes(Collection<Integer> positions) {
+		Objects.requireNonNull(positions);
+
+		var res = new ArrayList<Node>();
+		for (var pos : positions){
+
+			if (pos < 1 || pos > 5){
+				throw new IllegalArgumentException();
+			}
+
+			res.add(cards.get(pos - 1).shape());
+		}
+		return List.copyOf(res);
+	}
 
 
 

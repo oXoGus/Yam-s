@@ -12,11 +12,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MenuController {
 	private Game actualGame; 
     
+    // réafficher le menu
+    private Stage primaryStage;
+
     @FXML
     private Button soloButton;
 
@@ -150,10 +154,13 @@ public class MenuController {
         GameController gameController = loader.getController();
         gameController.setGame(actualGame);
 
+        // pour qu'on puisse revenir au menu depuis la partie 
+        gameController.setMenuController(this); 
+
         //On va chercher la fenetre de l'evenement
-    	Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    	stage.setScene(new Scene(root));
-    	stage.show();
+    	primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    	primaryStage.setScene(new Scene(root));
+    	primaryStage.show();
     }
 
     @FXML
@@ -162,5 +169,21 @@ public class MenuController {
         duelButton.setOnAction(e -> startMultiplePlayersGame(e));
         duelIAButton.setOnAction(e -> startDuelIAGame(e));
         customButton.setOnAction(e -> startCustomGame(e));
+    }
+
+    public void backToTheMenu(){
+        
+        // on remet tout de
+        try {
+			BorderPane root = FXMLLoader.load(getClass().getResource("/fr/uge/yams/views/menu.fxml"));
+			
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("Yams");
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
     }
 }

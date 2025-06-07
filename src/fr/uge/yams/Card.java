@@ -7,6 +7,7 @@ import java.util.Random;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Shape;
 
 // on représentes les cartes en fonction de leurs numéros
 // ♥ : 1 pour l'as jusqu'a 13 pour le roi 

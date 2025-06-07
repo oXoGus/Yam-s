@@ -1,15 +1,11 @@
 package fr.uge.yams;
 
-import java.io.IOError;
 import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Shape;
 
 public record Dice(int value) implements GameElement{

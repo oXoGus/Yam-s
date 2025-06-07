@@ -1,17 +1,14 @@
 package fr.uge.yams.models;
 
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Scanner;
-import java.util.Set;
+
 
 import fr.uge.yams.Board;
-import fr.uge.yams.Games;
 import fr.uge.yams.User;
 import fr.uge.yams.combinations.Combination;
 import javafx.scene.Node;
-import javafx.scene.shape.Shape;
 
 
 public class Player implements User {
@@ -143,7 +140,7 @@ public class Player implements User {
 
 	@Override
 	public List<Node> boardShapes(){
-		return board.shapes();
+		return board.allGameElementShapes();
 	}
 
 	// pour que la vue puisse afficher la scoreSheet 
@@ -161,5 +158,71 @@ public class Player implements User {
     public boolean isWithCards(){
         return board.isBoardCard();
     }
+
+	@Override
+	public void reroll(Collection<Integer> positions){
+		board.reroll(positions);
+	}
 	 
+	@Override
+	public List<Node> boardShapes(Collection<Integer> pos){
+		return board.gameElementShapes(pos);
+	}
+
+	@Override
+	public String testCombination(Combination combination){
+		// on fait tout les tests pour ajouter une combinaison
+		// si on ne peut pas l'ajouter on renvoie la cause sous forme de String 
+		if (scoreSheet.isSacrified(combination)){
+			return "this combination has already been sacrified";
+		}
+
+		if (scoreSheet.isValidate(combination)){
+			return "this combination has already been validated";
+		}
+		
+		// si aucun problème pour l'ajouter ou la supprimer
+		return null;
+	}
+
+	@Override
+	public String trySacrifyCombination(Combination combination){
+		
+		// si on ne peut pas sacrifier cette combinasion
+		var errorCode = testCombination(combination);
+		if (errorCode != null){
+			return errorCode;
+		}
+
+		// sinon on sacrifie la combi
+		scoreSheet.sacrifyCombination(combination, board);
+
+		return null;
+	}
+
+	@Override
+	public String tryAddCombination(Combination combination){
+		
+		// si on ne peut pas ajouter cette combinasion
+		var errorCode = testCombination(combination);
+		if (errorCode != null){
+			return errorCode;
+		}
+
+		if (!combination.isValid(board)){
+			return "this combination is note valid with this board";
+		}
+
+		// sinon on ajoute la combi
+		scoreSheet.addCombination(combination, board);
+
+		return null;
+	}
+
+	@Override
+	public boolean isCombinationPossible(){
+		return scoreSheet.isCombinaisonPossible(board);
+	}
+
+
 }

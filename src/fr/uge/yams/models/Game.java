@@ -25,7 +25,12 @@ public class Game {
     
     private final ArrayList<User> users;
 
-    
+    // on enrgistre la position du joueur dans la liste de la partie dont c'est le tour 
+    private int userTurnIndex = 0;
+
+    // même chose avec le n° du round 
+    private int numRound = 1;
+
     
     public Game(int numPlayer) {
 
@@ -68,6 +73,37 @@ public class Game {
             users.add(AI.chooseAI(i + 1, combinationsChosen, new BoardDice()));
         }
         
+    }
+
+    public User userTurn(){
+        // on renvoie le l'utilisateur dont c'est le tour 
+        return users.get(userTurnIndex);
+    }
+
+    public int numRound(){
+        return numRound;
+    }
+
+    public boolean isGameEnded(){
+        
+        // un partie se termine si on a fait un round par combinaison 
+        // et l'index du jour actif est le dernier de la liste des joueurs
+        return numRound >= combinationsChosen.size() && userTurnIndex == users.size() - 1;
+    }
+
+    public void nextTurn(){
+        // on modif les champs pour passer au tour suivant
+        if (userTurnIndex + 1 < users.size()){
+            userTurnIndex++;
+        } else {
+            // on change de round
+            numRound++;
+            userTurnIndex = 0;
+        }
+    }
+
+    public int maxRound(){
+        return combinationsChosen.size();
     }
 
     public List<Combination> combinationsChosen(){

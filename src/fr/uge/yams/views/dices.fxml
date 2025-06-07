@@ -1,47 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" ?>
 
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" prefWidth="600" prefHeight="200">
-
-    <AnchorPane layoutX="10" layoutY="10" prefWidth="90" prefHeight="90"
-                style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 12; -fx-background-radius: 12;">
-        <Circle centerX="45" centerY="45" radius="6" fill="black"/>
-    </AnchorPane>
-    <AnchorPane layoutX="105" layoutY="10" prefWidth="90" prefHeight="90"
-                style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 12; -fx-background-radius: 12;">
-        <Circle centerX="20" centerY="20" radius="6" fill="black"/>
-        <Circle centerX="70" centerY="70" radius="6" fill="black"/>
-    </AnchorPane>
-    <AnchorPane layoutX="200" layoutY="10" prefWidth="90" prefHeight="90"
-                style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 12; -fx-background-radius: 12;">
-        <Circle centerX="20" centerY="20" radius="6" fill="black"/>
-        <Circle centerX="45" centerY="45" radius="6" fill="black"/>
-        <Circle centerX="70" centerY="70" radius="6" fill="black"/>
-    </AnchorPane>
-    <AnchorPane layoutX="295" layoutY="10" prefWidth="90" prefHeight="90"
-                style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 12; -fx-background-radius: 12;">
-        <Circle centerX="20" centerY="20" radius="6" fill="black"/>
-        <Circle centerX="70" centerY="20" radius="6" fill="black"/>
-        <Circle centerX="20" centerY="70" radius="6" fill="black"/>
-        <Circle centerX="70" centerY="70" radius="6" fill="black"/>
-    </AnchorPane>
-    <AnchorPane layoutX="390" layoutY="10" prefWidth="90" prefHeight="90"
-                style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 12; -fx-background-radius: 12;">
-        <Circle centerX="20" centerY="20" radius="6" fill="black"/>
-        <Circle centerX="70" centerY="20" radius="6" fill="black"/>
-        <Circle centerX="45" centerY="45" radius="6" fill="black"/>
-        <Circle centerX="20" centerY="70" radius="6" fill="black"/>
-        <Circle centerX="70" centerY="70" radius="6" fill="black"/>
-    </AnchorPane>
-    <AnchorPane layoutX="485" layoutY="10" prefWidth="90" prefHeight="90"
-                style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 12; -fx-background-radius: 12;">
-        <Circle centerX="20" centerY="20" radius="6" fill="black"/>
-        <Circle centerX="70" centerY="20" radius="6" fill="black"/>
-        <Circle centerX="20" centerY="45" radius="6" fill="black"/>
-        <Circle centerX="70" centerY="45" radius="6" fill="black"/>
-        <Circle centerX="20" centerY="70" radius="6" fill="black"/>
-        <Circle centerX="70" centerY="70" radius="6" fill="black"/>
-    </AnchorPane>
+<AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" prefWidth="600" prefHeight="200" style="-fx-padding: 20; -fx-spacing: 10;">
+  <Group layoutX="20" layoutY="20">
+    <Rectangle x="0" y="0" width="80" height="80" arcWidth="20" arcHeight="20" fill="white" stroke="black" strokeWidth="2"/>
+    <Circle centerX="40" centerY="40" radius="5" fill="black"/>
+  </Group>
+  <Group layoutX="115" layoutY="20">
+    <Rectangle x="0" y="0" width="80" height="80" arcWidth="20" arcHeight="20" fill="white" stroke="black" strokeWidth="2"/>
+    <Circle centerX="20" centerY="20" radius="5" fill="black"/>
+    <Circle centerX="60" centerY="60" radius="5" fill="black"/>
+  </Group>
+  <Group layoutX="210" layoutY="20">
+    <Rectangle x="0" y="0" width="80" height="80" arcWidth="20" arcHeight="20" fill="white" stroke="black" strokeWidth="2"/>
+    <Circle centerX="20" centerY="20" radius="5" fill="black"/>
+    <Circle centerX="40" centerY="40" radius="5" fill="black"/>
+    <Circle centerX="60" centerY="60" radius="5" fill="black"/>
+  </Group>
+  <Group layoutX="305" layoutY="20">
+    <Rectangle x="0" y="0" width="80" height="80" arcWidth="20" arcHeight="20" fill="white" stroke="black" strokeWidth="2"/>
+    <Circle centerX="20" centerY="20" radius="5" fill="black"/>
+    <Circle centerX="20" centerY="60" radius="5" fill="black"/>
+    <Circle centerX="60" centerY="20" radius="5" fill="black"/>
+    <Circle centerX="60" centerY="60" radius="5" fill="black"/>
+  </Group>
+  <Group layoutX="400" layoutY="20">
+    <Rectangle x="0" y="0" width="80" height="80" arcWidth="20" arcHeight="20" fill="white" stroke="black" strokeWidth="2"/>
+    <Circle centerX="20" centerY="20" radius="5" fill="black"/>
+    <Circle centerX="20" centerY="60" radius="5" fill="black"/>
+    <Circle centerX="40" centerY="40" radius="5" fill="black"/>
+    <Circle centerX="60" centerY="20" radius="5" fill="black"/>
+    <Circle centerX="60" centerY="60" radius="5" fill="black"/>
+  </Group>
+  <Group layoutX="495" layoutY="20">
+    <Rectangle x="0" y="0" width="80" height="80" arcWidth="20" arcHeight="20" fill="white" stroke="black" strokeWidth="2"/>
+    <Circle centerX="20" centerY="20" radius="5" fill="black"/>
+    <Circle centerX="20" centerY="40" radius="5" fill="black"/>
+    <Circle centerX="20" centerY="60" radius="5" fill="black"/>
+    <Circle centerX="60" centerY="20" radius="5" fill="black"/>
+    <Circle centerX="60" centerY="40" radius="5" fill="black"/>
+    <Circle centerX="60" centerY="60" radius="5" fill="black"/>
+  </Group>
 </AnchorPane>

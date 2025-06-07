@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javafx.scene.Node;
+import javafx.scene.shape.Shape;
 
 public interface Board {
     void rerollAll();
@@ -53,4 +54,5 @@ public interface Board {
 
 	List<Node> allGameElementShapes();
 
+	List<Node> gameElementShapes(Collection<Integer> positions);
 }

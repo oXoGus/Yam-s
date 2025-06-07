@@ -1,75 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="fr.uge.yams.controllers.UserController" style="-fx-background-color: #4C4540;" prefWidth="1000" prefHeight="600">
-
-    <!-- Partie gauche : Tableau de combinaisons -->
-    <left>
-        <VBox spacing="10" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-            <VBox.margin>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </VBox.margin>
-            <Label text="🔴" style="-fx-font-size: 24;" />
-            <Label text="Table of combinations" style="-fx-font-weight: bold;"/>
-            <TableView fx:id="comboTable" prefHeight="400">
-                <columns>
-                    <TableColumn fx:id="comboColumn" text="Combinations"/>
-                    <TableColumn fx:id="statusColumn" text="Statut"/>
-                    <TableColumn fx:id="scoreColumn" text="Score"/>
-                </columns>
-            </TableView>
-        </VBox>
-    </left>
-
-    <!-- Partie haut : Titre -->
-    <top>
-        <VBox alignment="CENTER" spacing="10" BorderPane.alignment="CENTER">
-            <VBox.margin>
-                <Insets top="20" right="0" bottom="10" left="0"/>
-            </VBox.margin>
-            <Label text="Yams" style="-fx-font-size: 28; -fx-text-fill: white;"/>
-            <Label fx:id="usernameLabel" text="Player : " style="-fx-font-size: 16; -fx-text-fill: white;"/>
-        </VBox>
-    </top>
-
-    <!-- Partie centre : Dés -->
-    <center>
-        <VBox spacing="20" alignment="CENTER">
-            <VBox.margin>
-                <Insets top="20" right="0" bottom="20" left="0"/>
-            </VBox.margin>
-
-            <!-- Cercle de dés -->
-            <StackPane prefWidth="200" prefHeight="500" style="-fx-background-color: #3C6843; -fx-border-radius: 100; -fx-background-radius: 100; -fx-border-color: #D6C8A6; -fx-border-width: 10;">
-                <AnchorPane fx:id="gameElementContainer" topAnchor="0.0" bottomAnchor="0.0" leftAnchor="0.0" rightAnchor="0.0">
-                    <!-- On injecte les éléments de jeux ici -->
-                </AnchorPane>
-            </StackPane>
-
-            <Button text="Roll" onAction="#onRollButtonClick" fx:id="rollButton" style="-fx-background-color: #B8CDE2; -fx-font-weight: bold;"/>
-            <Label fx:id="rerollLabel" text="Relances restantes : x/3" style="-fx-text-fill: white;"/>
-        </VBox>
-    </center>
+<BorderPane prefHeight="600" prefWidth="1000" style="-fx-background-color: #4C4540;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="fr.uge.yams.controllers.UserController">
 
     <!-- Partie bas : Choix de combinaison -->
     <bottom>
-        <VBox spacing="10" alignment="CENTER">
+        <VBox alignment="TOP_CENTER" prefHeight="113.0" prefWidth="1000.0" spacing="10">
             <VBox.margin>
-                <Insets top="10" right="0" bottom="20" left="0"/>
+                <Insets bottom="20" left="0" right="0" top="10" />
             </VBox.margin>
-            <Label text="Choisissez une combinaison" style="-fx-text-fill: white;"/>
-            <HBox spacing="10" alignment="CENTER">
-                <Button text="Long Straight" style="-fx-background-color: #7C9BB7;"/>
-                <Button text="Yahtzee" style="-fx-background-color: #7C9BB7;"/>
-                <Button text="Small Straight" style="-fx-background-color: #3C8DD8; -fx-text-fill: white;"/>
-                <Button text="Full Straight" style="-fx-background-color: #7C9BB7;"/>
+         <children>
+               <HBox fx:id="combinationContainer" alignment="CENTER" spacing="10">
+                <!-- On injecte les boutons pour les différentes combinaisons ici -->
+
             </HBox>
-            <Button text="Valider" fx:id="validateButton"
-                    style="-fx-background-color: #D2D7C8; -fx-font-weight: bold;"/>
+               
+               
+               <Label fx:id="validateOrSacrifyCombinationLabel" style="-fx-text-fill: white; -fx-font-weight: bold;" text="" />
+         </children>
+            
         </VBox>
     </bottom>
+   <center>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="CENTER" prefHeight="423.0" prefWidth="235.0" spacing="10.0" HBox.hgrow="NEVER">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-weight: bold;" text="Table of score" textFill="WHITE" />
+                  <TableView fx:id="scoreTable" prefHeight="144.0" prefWidth="235.0">
+                    <columns>
+                      <TableColumn fx:id="playerColumn" prefWidth="170.0" resizable="false" text="Player" />
+                      <TableColumn fx:id="scoreColumn" prefWidth="65.0" text="Score" />
+                    </columns>
+                  </TableView>
+               </children>
+            </VBox>
+              <VBox alignment="CENTER" prefHeight="423.0" prefWidth="511.0" spacing="20" HBox.hgrow="ALWAYS">
+      
+                              <!-- Cercle de dés -->
+                  <StackPane prefHeight="400" prefWidth="200" style="-fx-background-color: #3C6843; -fx-border-radius: 100; -fx-background-radius: 100; -fx-border-color: #D6C8A6; -fx-border-width: 10;">
+                  <children>
+                         <AnchorPane fx:id="gameElementContainer" prefHeight="239.0" prefWidth="630.0">
+                        <StackPane.margin>
+                           <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                        </StackPane.margin>
+                     </AnchorPane>
+                  </children>
+                  <VBox.margin>
+                     <Insets left="50.0" right="50.0" top="50.0" />
+                  </VBox.margin>
+                  </StackPane>
+      
+                              <Button fx:id="rollButton" onAction="#onRollButtonClick" style="-fx-background-color: #B8CDE2; -fx-font-weight: bold;" text="Roll" />
+                  <Label fx:id="rerollLabel" style="-fx-text-fill: white;" text="Relances restantes : x/3" />
+              </VBox>
+              <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #4C4540white;" HBox.hgrow="NEVER">
+                  <Label style="-fx-font-weight: bold;" text="Table of combinations" textFill="#f5f5f5" />
+                  <TableView fx:id="comboTable" prefHeight="243.0" prefWidth="235.0" VBox.vgrow="NEVER">
+                      <columns>
+                          <TableColumn fx:id="comboColumn" prefWidth="100.0" text="Combinations" />
+                          <TableColumn fx:id="statusColumn" text="Statut" />
+                          <TableColumn fx:id="scoreColumn" prefWidth="60.0" text="Score" />
+                      </columns>
+                  </TableView>
+              </VBox>
+         </children>
+      </HBox>
+   </center>
+   <top>
+      <AnchorPane prefHeight="70.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+         <children>
+               <Button fx:id="menuBtn" layoutX="19.0" layoutY="21.0" onAction="#backToTheMenu" style="-fx-background-color: #B8CDE2; -fx-font-weight: bold;" text="Menu" />
+              <VBox alignment="CENTER" layoutX="458.0" layoutY="2.0" spacing="10">
+                  <Label style="-fx-font-size: 28; -fx-text-fill: white;" text="Yam's" />
+                  <Label fx:id="usernameLabel" style="-fx-font-size: 16; -fx-text-fill: white;" text="Player : " />
+              </VBox>
+         </children>
+      </AnchorPane>
+   </top>
 </BorderPane>

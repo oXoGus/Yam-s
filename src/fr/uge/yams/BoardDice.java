@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javafx.scene.Node;
+import javafx.scene.shape.Shape;
 
 public class BoardDice implements Board{
     private final ArrayList<Dice> fiveDice;
@@ -201,6 +202,22 @@ public class BoardDice implements Board{
 		var res = new ArrayList<Node>();
 		for (var dice : fiveDice){
 			res.add(dice.shape());
+		}
+		return List.copyOf(res);
+	}
+
+	@Override
+	public List<Node> gameElementShapes(Collection<Integer> positions) {
+		Objects.requireNonNull(positions);
+
+		var res = new ArrayList<Node>();
+		for (var pos : positions){
+
+			if (pos < 1 || pos > 5){
+				throw new IllegalArgumentException();
+			}
+
+			res.add(fiveDice.get(pos - 1).shape());
 		}
 		return List.copyOf(res);
 	}
