@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox fx:id="mainContainer" alignment="TOP_CENTER" stylesheets="@application.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.uge.yams.controllers.ScoreSheetGuideController">
+<VBox fx:id="mainContainer" alignment="TOP_CENTER" stylesheets="@application.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.uge.yams.controllers.ScoreSheetGuideController">
    <children>
       <Label fx:id="titleLabel" alignment="CENTER" prefHeight="55.0" prefWidth="886.0" style="-fx-font-weight: bold; -fx-font-size: 30; -fx-text-fill: #ede6d6;" text="'s Score Sheet">
          <VBox.margin>

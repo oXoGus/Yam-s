@@ -1,6 +1,6 @@
 module Yams {
 	requires javafx.controls;
-	requires javafx.graphics;
+	requires transitive javafx.graphics;
 	requires javafx.fxml;
 	
 	opens fr.uge.yams.controllers to javafx.graphics, javafx.fxml;
@@ -9,4 +9,5 @@ module Yams {
 
 	exports fr.uge.yams.controllers;
 	exports fr.uge.yams.models;
+	exports fr.uge.yams.views;
 }

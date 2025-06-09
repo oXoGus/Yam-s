@@ -1,13 +1,9 @@
 package fr.uge.yams.models;
 
-import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import fr.uge.yams.Board;
-import fr.uge.yams.combinations.Combination;
 
 
 public class ScoreSheet {
@@ -38,7 +34,7 @@ public class ScoreSheet {
 		
 		// on force que les combinaison passé en param fasse partie de la liste des combinaisons 
 		if (!combinations.contains(pattern)){
-			throw new IllegalArgumentException("this combinaison does not correspond to the combinaisons in this ScorSheet");
+			throw new IllegalArgumentException("this combinaison does not correspond to the combinaisons in this ScoreSheet");
 		}
 	}
 
@@ -143,72 +139,17 @@ public class ScoreSheet {
 		return !isValidate(comb) && !isSacrified(comb);
 	}
 
-	// pour l'affichage dynamique du toString()
-	public String state(Combination pattern){
-		Objects.requireNonNull(pattern);
-		requirePatternInDiceCombinations(pattern);
-
-		if (isValidate(pattern)){
-			return "validate";
-		}
-		if (isSacrified(pattern)){
-			return "sacrified";
-		}
-		return "          ";
-	}
-
-	public String dynamicScore(Combination pattern){
-		Objects.requireNonNull(pattern);
-		requirePatternInDiceCombinations(pattern);
-		
-		int score = validateDiceCombinations.getOrDefault(pattern, 0);
-		if (score == 0){
-			return "Sum of all dice";
-		}
-		if (score < 10){
-			return score + "              ";
-		}
-		return score + "             ";
+	public void clear(){
+		// vide toute la scoreSheet pour recommencer une partie 
+		validateDiceCombinations.clear();
+		sacrifiedDiceCombination.clear();
 	}
 
 	public int scoreTotal() {
 		return validateDiceCombinations.values().stream().mapToInt(Integer::intValue).sum();
 	}
 
-
-	// refaire le toString sous forme de tableau
-	@Override
-	public String toString() {
-		String s;
-		String sep = "+------+-----------+-----------------+----------------------------------------+-----------------+\n";
-		
-		
-		// titres des colonnes
-		s = sep;
-		s += "| code | state     | name            | descripton                             | score           |\n";
-		s += sep;
-
-		// on met uniquement les combinaisons choisi
-		for (var comb : combinations){
-			s += comb.toString(state(comb), dynamicScore(comb));
-		}
-		s += sep;
-		return s;
-
-	}
-
-
-	public Combination parseCombination(String combinationName) {
-		Objects.requireNonNull(combinationName);
-
-		// ne pas lancer une exception mais reposer la question si default
-		for (var comb : combinations){
-
-			if (comb.code().equals(combinationName)){
-				return comb;
-			}
-		}
-
-		return null;  // null par défaut pour la gestion des erreurs 
+	public List<Combination> combinationChosen(){
+		return combinations;
 	}
 }

@@ -1,7 +1,6 @@
 package fr.uge.yams.controllers;
 
 import javafx.animation.PauseTransition;
-import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,9 +20,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import fr.uge.yams.User;
-import fr.uge.yams.models.CombinationInfo;
 import fr.uge.yams.models.Game;
+import fr.uge.yams.models.User;
 import fr.uge.yams.models.UserScore;
 
 
@@ -47,6 +45,10 @@ public class GameController {
     private TableColumn<UserScore, Integer> playerScoreColumn;
     @FXML
     private TableColumn<UserScore, Integer> playerRankColumn;
+    @FXML
+    private Button mainMenuBtn;
+    @FXML
+    private Button playAgainBtn;
 
     // on inject la game depuis le controlleur du menu
     public void setGame(Game game){
@@ -126,8 +128,21 @@ public class GameController {
         Objects.requireNonNull(user);
 
          try {
-            //On charge l'interface de jeu pour l'utilisateur
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fr/uge/yams/views/UserView.fxml"));
+
+            // pas possible de faire du polymorphisme sur les controlleur en javaFX...
+            // donc on charge la vue et son controlleur qui va bien 
+            FXMLLoader loader;
+            
+            if (user.isAI()){
+
+                //On charge l'interface de jeu pour l'IA
+                loader = new FXMLLoader(getClass().getResource("/fr/uge/yams/views/AIView.fxml"));
+            } else {
+
+                //On charge l'interface de jeu pour le joueur
+                loader = new FXMLLoader(getClass().getResource("/fr/uge/yams/views/PlayerView.fxml"));
+            }
+
             Parent userView = loader.load();
 
             // on récupère le controlleur et on inject le model de l'user
@@ -148,7 +163,7 @@ public class GameController {
         
         // si la partie est termnié 
         if (game.isGameEnded()){        
-            // TODO  affichage écran de fin
+            endScreen();
             return;
         }
 
@@ -175,10 +190,17 @@ public class GameController {
         scoreTable.setItems(scoreBoardData());
 
         // on définit la taille du tableau en fonction du nombre délémént dedans pour ne pas afficher de lignes vides
-        scoreTable.setFixedCellSize(25);
+        scoreTable.setFixedCellSize(50);
 
         // on multiplie la taille d'une row par le nombre de row
-        scoreTable.prefHeightProperty().bind(Bindings.size(scoreTable.getItems()).multiply(scoreTable.getFixedCellSize()).add(28));    
+        scoreTable.prefHeightProperty().bind(Bindings.size(scoreTable.getItems()).multiply(scoreTable.getFixedCellSize()).add(32));    
+    }
+
+    public void playAgain(){
+        // on reset toutes les scoreSheet des utilisateurs
+        game.reset();
+        
+        startTurn();
     }
 
     @FXML 
@@ -196,8 +218,8 @@ public class GameController {
         // puis on le retire pour laisser place a la vue de l'user
         mainContainer.setCenter(null);
 
-    }
+        mainMenuBtn.setOnAction(e -> backToTheMenu());
 
-
-    
+        playAgainBtn.setOnAction(e -> playAgain());
+    }    
 }

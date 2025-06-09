@@ -105,6 +105,10 @@ public class MenuController {
             return;
         }
 
+        // pas de game a 0 joueur 
+        if (numAI == 0 && numPlayer == 0){
+            return;
+        }
         // l'utilisateur a appuyé sur cancel 
         
         actualGame = new Game(numPlayer, numAI);
@@ -133,15 +137,15 @@ public class MenuController {
         //Tant que la valeur récupérée est null, qu'elle ne contient pas que des chiffres et que la valeur vaut 0, on redemande
         do {
             result = dialog.showAndWait();
-            if (result.isPresent() && result.get().matches("\\d+")) {
+            if (result.isPresent() && result.get().matches("^(0|[1-9]\\d*)$")) {
                 nb = Integer.parseInt(result.get());
             } else if (result.isEmpty()){
                 // le joueur a appuyé sur cancel 
                 return -1;
             } else {
-                nb = 0;
+                nb = -1;
             }
-        } while (nb == 0);
+        } while (nb == -1);
 
         return nb;
     }
@@ -157,15 +161,15 @@ public class MenuController {
         //Tant que la valeur récupérée est null, qu'elle ne contient pas que des chiffres et que la valeur vaut 0, on redemande
         do {
             result = dialog.showAndWait();
-            if (result.isPresent() && result.get().matches("\\d+")) {
+            if (result.isPresent() && result.get().matches("^(0|[1-9]\\d*)$")) {
                 nb = Integer.parseInt(result.get());
             }else if (result.isEmpty()){
                 // le joueur a appuyé sur cancel 
                 return -1;
             } else {
-                nb = 0;
+                nb = -1;
             }
-        } while (nb == 0);
+        } while (nb == -1);
         return nb;
     }
     

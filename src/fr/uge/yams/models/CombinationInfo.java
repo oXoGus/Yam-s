@@ -2,8 +2,6 @@ package fr.uge.yams.models;
 
 import java.util.Objects;
 
-import fr.uge.yams.combinations.Combination;
-
 public record CombinationInfo(Combination combination, String state, String howToObtain, Integer score, String scoreInfo) {
     
     public CombinationInfo {

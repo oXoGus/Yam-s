@@ -4,8 +4,8 @@ package fr.uge.yams.controllers;
 import java.util.List;
 import java.util.Objects;
 
-import fr.uge.yams.User;
 import fr.uge.yams.models.CombinationInfo;
+import fr.uge.yams.models.User;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;

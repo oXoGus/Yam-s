@@ -21,6 +21,10 @@ public class UserScore implements Comparable<UserScore>{
     }
 
     public void setRank(int rank){
+        if (rank < 1){
+            throw new IllegalArgumentException();
+        }
+
         this.rank = rank;
     }
 
